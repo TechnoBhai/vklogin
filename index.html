@@ -181,20 +181,24 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
     align-items: center;
     justify-content: center;
     
-    /* Your original color scheme */
+    /* Colors & Typography */
     background: #A9CFB4;
     color: #14522E;
     font-size: .22rem; 
     font-weight: 400;
     line-height: 1;
 
-    /* EQUATED RATIOS: Converted from the original code to fit your font scale */
-    border-radius: .09rem; /* Perfectly matches their .1rem corner shape in your scale */
-    width: 1.35rem;        /* Scaled down width to make "Get Code" fit exactly like the picture */
-    height: 100%;          /* Forces it to fill the height of the green input box */
-    padding: 0 .045rem;    /* Scaled down version of their 0 .05rem padding */
+    /* FIXED STRUCTURAL RATIOS */
+    border-radius: .12rem;     /* Increased slightly to soften and match the corners */
+    width: 1.35rem;        
+    height: 80%;               /* Reduced from 100% to create the top/bottom spacing gap */
+    padding: 0 .05rem;    
     
-    /* Optional structural safety items */
+    /* FIX: Added spatial gaps to pull it away from the top/bottom/right borders */
+    margin-right: .06rem;      
+    margin-top: auto;          /* Centers it vertically inside the parent container */
+    margin-bottom: auto;       /* Centers it vertically inside the parent container */
+    
     box-sizing: border-box;
 }
 
@@ -202,7 +206,7 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
     opacity: .6;
 }
 
-/* Ensure it turns into flex when active so alignment rules apply */
+/* Ensure display overrides to flex when active */
 .panel.code .f-pass .get-code {
     display: flex; 
 }
