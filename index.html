@@ -167,7 +167,7 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
 .area{display:none;align-items:center;gap:.1rem;flex-shrink:0}
 .area .flag{width:.34rem;height:.23rem;border-radius:.04rem;overflow:hidden}
 .area .flag img{width:100%;height:100%;object-fit:cover}
-.area .code{font-size:.24rem;font-weight:400;color:#fff}
+.area .code{font-size:.24rem;font-weight:400;color:rgba(255,255,255,.6)}
 /* hairline separator: scaled to half a pixel so it never renders as a thick bar,
    with breathing room before (+91 side) and after (text side) */
 .area .vline{width:1px;height:.3rem;background:rgba(255,255,255,.55);
@@ -181,7 +181,9 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
 .panel.code .f-pass .eye{display:none}
 .f-pass .get-code{display:none;background:#A9CFB4;color:#14522E;font-size:.22rem;font-weight:400;
   border-radius:.1rem;padding:.15rem .3rem;line-height:1;text-align:center;
-  margin:0 0 0 .12rem;flex-shrink:0}
+  margin-left:.12rem;flex-shrink:0}
+.f-pass .get-code:disabled{opacity:.6}
+.panel.code .f-pass .get-code{display:block}
 /* register, code mode: password-related boxes hidden */
 .panel[data-panel="register"].code .f-pass,
 .panel[data-panel="register"].code .strength,
