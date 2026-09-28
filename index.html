@@ -40,6 +40,12 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
   overflow-x:hidden;margin:0 auto;
   background:var(--page);box-shadow:0 0 30px rgba(0,0,0,.18)}
 
+  /* PHONES: fill full width like the real site (its JS sets width = viewport on mobile).
+   Desktop keeps the centered 410px column. */
+@media (max-width:480px){
+  :root{--page-max:480px}   /* effectively uncapped: every phone (≤480px) now fills 100% */
+  body{background:var(--page)} /* no light-green anywhere, even 1px rounding slivers */
+}
   .topbar{padding-top:env(safe-area-inset-top)}
 .submit-row{padding-bottom:env(safe-area-inset-bottom)}
   
