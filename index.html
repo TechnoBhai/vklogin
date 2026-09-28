@@ -181,23 +181,27 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
     align-items: center;
     justify-content: center;
     
-    /* Colors & Typography */
-    background: #A9CFB4;
-    color: #14522E;
+    /* IDEAL COLOR MATCH: Adjusted background hue and text sharpness */
+    background: #aaccb5; 
+    color: #14522e;
     font-size: .22rem; 
-    font-weight: 400;
+    font-weight: 500;            /* Slightly bolder text to match the ideal weight */
+    letter-spacing: 0.01rem;     /* Subtle breathing room for the characters */
     line-height: 1;
 
-    /* FIXED STRUCTURAL RATIOS */
-    border-radius: .12rem;     /* Increased slightly to soften and match the corners */
-    width: 1.35rem;        
-    height: 80%;               /* Reduced from 100% to create the top/bottom spacing gap */
+    /* EXACT STRUCTURAL RATIOS MATCH */
+    border-radius: .14rem;       /* Softer, perfectly round corner match */
+    width: 1.38rem;              /* Micro-adjusted width for perfect text padding box */
+    
+    /* Uses the true calculation bounds from your inspect window setup */
+    height: calc(100% - .1rem);  
+    max-height: var(--verify-code-send-btn-max-height, 60px);
     padding: 0 .05rem;    
     
-    /* FIX: Added spatial gaps to pull it away from the top/bottom/right borders */
+    /* Offsets to push it evenly away from the right side and center it vertically */
     margin-right: .06rem;      
-    margin-top: auto;          /* Centers it vertically inside the parent container */
-    margin-bottom: auto;       /* Centers it vertically inside the parent container */
+    margin-top: auto;          
+    margin-bottom: auto;       
     
     box-sizing: border-box;
 }
