@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -10,6 +10,23 @@
 <link rel="manifest" href="manifest.json">
 <title>QQwin.com - Online Slots Casino</title>
 <script>function imgFallback(el,local){if(el.dataset.fb){el.style.visibility='hidden';return}el.dataset.fb=1;el.src=local}</script>
+<script>
+/* Full pinch/double-tap zoom lock */
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('gesturechange',e=>e.preventDefault());
+document.addEventListener('gestureend',e=>e.preventDefault());
+['touchmove','touchstart','touchend'].forEach(ev=>
+  document.addEventListener(ev,function(e){
+    if(e.touches.length>1)e.preventDefault();
+  },{passive:false})
+);
+let __lastTap=0;
+document.addEventListener('touchend',function(e){
+  const now=Date.now();
+  if(now-__lastTap<=350){e.preventDefault();}
+  __lastTap=now;
+},{passive:false});
+</script>
 <style>
 :root{
   --primary:#FEE001;--btn-text:#067831;
@@ -28,7 +45,7 @@
 /* real-site formula (capture): font-size = max-width / 7.5, clamped by the dial */
 html{font-size:calc(min(100vw,var(--page-max))/7.5);
   height:100%;overflow:hidden;overscroll-behavior:none;
-  touch-action:pan-x pan-y;
+  touch-action:manipulation;
   -webkit-text-size-adjust:none;text-size-adjust:none}
 img{display:block;max-width:100%}
 ul{list-style:none}
@@ -46,16 +63,15 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
   :root{--page-max:480px}   /* effectively uncapped: every phone (≤480px) now fills 100% */
   body{background:var(--page)} /* no light-green anywhere, even 1px rounding slivers */
 }
-  .topbar{padding-top:env(safe-area-inset-top)}
 .submit-row{padding-bottom:env(safe-area-inset-bottom)}
   
 .band{position:absolute;top:0;left:0;right:0;height:2rem;z-index:0;pointer-events:none;
   background:var(--band)}
 .band img{width:100%;height:100%;object-fit:cover}
 
-.topbar{position:relative;z-index:1;height:1rem;padding:0 .2rem;display:flex;align-items:center}
-.back{width:.75rem;height:100%;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;color:#C4FFD9}
+.topbar{position:relative;z-index:1;height:1rem;padding:.0 .2rem;padding-top:env(safe-area-inset-top);display:flex;align-items:center}
+.back{width:.75rem;height:100%;display:flex;align-items:center;justify-content:flex-start;
+  flex-shrink:0;color:#C4FFD9;margin-left:-.06rem}
 .back svg{width:.34rem;height:.34rem}
 .logo-box{flex:1;min-width:0;height:.74rem;display:flex;justify-content:center;align-items:center;
   padding-right:.75rem}
