@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0C913F">
+<link rel="manifest" href="manifest.json">
 <title>QQwin.com - Online Slots Casino</title>
 <script>function imgFallback(el,local){if(el.dataset.fb){el.style.visibility='hidden';return}el.dataset.fb=1;el.src=local}</script>
 <style>
@@ -21,15 +26,23 @@
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,"Segoe UI",Arial,Roboto,"PingFang SC",miui,"Hiragino Sans GB","Microsoft Yahei",sans-serif;
   -webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
 /* real-site formula (capture): font-size = max-width / 7.5, clamped by the dial */
-html{font-size:calc(min(100vw,var(--page-max))/7.5)}
+html{font-size:calc(min(100vw,var(--page-max))/7.5);
+  height:100%;overflow:hidden;overscroll-behavior:none;
+  touch-action:pan-x pan-y;
+  -webkit-text-size-adjust:none;text-size-adjust:none}
 img{display:block;max-width:100%}
 ul{list-style:none}
 button{font:inherit;border:none;background:none;cursor:pointer;color:inherit}
-body{min-height:100vh;color:var(--mint);font-size:.24rem;display:flex;justify-content:center;
-  overflow-x:hidden;background:var(--page-outer)}
-.page{position:relative;width:100%;max-width:var(--page-max);min-height:100vh;overflow-x:hidden;
+body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content:center;
+  overflow:hidden;background:var(--page-outer);
+  position:fixed;inset:0;width:100%}
+.page{position:relative;width:100%;max-width:var(--page-max);height:100vh;height:100dvh;
+  overflow-x:hidden;margin:0 auto;
   background:var(--page);box-shadow:0 0 30px rgba(0,0,0,.18)}
 
+  .topbar{padding-top:env(safe-area-inset-top)}
+.submit-row{padding-bottom:env(safe-area-inset-bottom)}
+  
 .band{position:absolute;top:0;left:0;right:0;height:2rem;z-index:0;pointer-events:none;
   background:var(--band)}
 .band img{width:100%;height:100%;object-fit:cover}
