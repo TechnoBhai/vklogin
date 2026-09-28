@@ -176,8 +176,17 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
 .f-pass .ic-sms{display:none}
 .panel.code .f-pass .ic-sms{display:block}
 .panel.code .f-pass .eye{display:none}
-.f-pass .get-code{display:none;background:#A9CFB4;color:#14522E;font-size:.22rem;font-weight:400;
-  border-radius:.09rem;padding:.11rem .16rem;line-height:1}
+f pass get code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--skin__primary);
+  border-radius: 1rem;
+  width: 1.5rem;
+  height: calc(100% - 1rem); /* assuming 100% based on 'calc 100 1rem' context */
+  padding: var(--lobby__px) 2rem; /* assuming standard var/value mapping */
+  max-height: var(--verify-code-send-btn-max-height, 60px);
+}
 .f-pass .get-code:disabled{opacity:.6}
 .panel.code .f-pass .get-code{display:block}
 /* register, code mode: password-related boxes hidden */
