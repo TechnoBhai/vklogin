@@ -134,7 +134,7 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
 .tab-subtitle{color:#fff;font-size:.22rem;line-height:1.28;padding-bottom:.08rem}
 .form-item{margin-bottom:.2rem}
 .ui-input{display:flex;align-items:center;height:.7rem;padding:0 .2rem;gap:.06rem;
-  border:1px solid var(--mint2);border-radius:.14rem;background:var(--bg2);min-width:0;
+  border:1px solid var(--mint2);border-radius:.1rem;background:var(--bg2);min-width:0;
   color:var(--mint2)}
 .ui-input:focus-within{border-color:var(--primary)}
 .ic{width:.3rem;height:.3rem;flex-shrink:0;fill:var(--mint2)}
@@ -179,11 +179,12 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
 .f-pass .ic-sms{display:none}
 .panel.code .f-pass .ic-sms{display:block}
 .panel.code .f-pass .eye{display:none}
-.f-pass .get-code{display:none;background:#9DC7A8;color:#14522E;font-size:.24rem;font-weight:400;
-  border-radius:.1rem;padding:.16rem .3rem;line-height:1;text-align:center;
-  margin-left:.12rem;flex-shrink:0}
+.f-pass .get-code{display:none;background:var(--mint2);color:var(--btn-text);font-size:.22rem;
+  font-weight:400;border-radius:.1rem;min-width:1.5rem;height:.6rem;padding:0 .05rem;
+  line-height:1;text-align:center;margin-left:.12rem;flex-shrink:0;
+  align-items:center;justify-content:center}
 .f-pass .get-code:disabled{opacity:.6}
-.panel.code .f-pass .get-code{display:block}
+.panel.code .f-pass .get-code{display:flex}
 /* register, code mode: password-related boxes hidden */
 .panel[data-panel="register"].code .f-pass,
 .panel[data-panel="register"].code .strength,
