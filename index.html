@@ -179,13 +179,16 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
 .f-pass .ic-sms{display:none}
 .panel.code .f-pass .ic-sms{display:block}
 .panel.code .f-pass .eye{display:none}
-.f-pass .get-code{display:none;background:var(--mint2);color:var(--btn-text);font-size:.22rem;
+.f-pass .get-code,.f-sms .get-code{display:none;background:var(--mint2);color:var(--btn-text);font-size:.22rem;
   font-weight:400;border-radius:.1rem;min-width:1.5rem;height:.6rem;padding:0 .05rem;
   line-height:1;text-align:center;margin-left:.12rem;flex-shrink:0;
   align-items:center;justify-content:center}
-.f-pass .get-code:disabled{opacity:.6}
-.panel.code .f-pass .get-code{display:flex}
-.panel.code .f-pass .ui-input{padding-right:.05rem}
+.f-pass .get-code:disabled,.f-sms .get-code:disabled{opacity:.6}
+.panel.code .f-pass .get-code,.panel.code .f-sms .get-code{display:flex}
+.panel.code .f-pass .ui-input,.panel.code .f-sms .ui-input{padding-right:.05rem}
+/* register's dedicated SMS field: hidden by default, shown only in code mode */
+.f-sms{display:none}
+.panel.code .f-sms{display:block}
 /* register, code mode: password-related boxes hidden */
 .panel[data-panel="register"].code .f-pass,
 .panel[data-panel="register"].code .strength,
@@ -377,7 +380,20 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
                   Code register
                 </button>
               </div>
-
+              <section class="form-item f-sms">
+                <div class="ui-input">
+                  <svg class="ic ic-sms" viewBox="0 0 24 24"><path d="M12 3C6.9 3 2.8 6.4 2.8 10.6c0 2.3 1.2 4.4 3.2 5.8v3.1c0 .4.5.7.9.4l2.7-1.9c.8.2 1.6.3 2.4.3 5.1 0 9.2-3.5 9.2-7.7S17.1 3 12 3z" fill="#87D1A2"/><circle cx="8.2" cy="10.7" r="1.1" fill="#067831"/><circle cx="12" cy="10.7" r="1.1" fill="#067831"/><circle cx="15.8" cy="10.7" r="1.1" fill="#067831"/></svg>
+                  <span class="star">*</span>
+                  <input type="text" placeholder="Enter SMS code" maxlength="6" inputmode="numeric" autocomplete="one-time-code" spellcheck="false">
+                  <span class="suffix">
+                    <button type="button" class="clear-btn" aria-label="Clear" hidden>
+                      <svg viewBox="0 0 24 24"><path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6z"/></svg>
+                    </button>
+                    <button type="button" class="get-code">Get Code</button>
+                  </span>
+                </div>
+                <div class="explain"><span class="e-ic"><svg viewBox="0 0 34 34"><path d="M19.092 7.32275L18.6183 20.0115H15.5172L15.0676 7.32275H19.092ZM14.8541 23.9019C14.847 23.626 14.9017 23.352 15.0145 23.1001C15.1272 22.8482 15.295 22.6248 15.5055 22.4464C15.9487 22.0643 16.5187 21.8616 17.1036 21.8784C17.6882 21.8586 18.2581 22.0641 18.6954 22.4526C18.9005 22.6332 19.0635 22.8566 19.1729 23.107C19.2824 23.3574 19.3356 23.6287 19.3289 23.9019C19.3333 24.1722 19.2808 24.4405 19.1748 24.6893C19.0687 24.938 18.9115 25.1617 18.7134 25.3457C18.5184 25.5378 18.287 25.6892 18.0328 25.7909C17.7786 25.8926 17.5067 25.9425 17.2329 25.9378C16.6004 25.9705 15.9797 25.7584 15.4993 25.3457C15.2936 25.1661 15.1294 24.9439 15.018 24.6947C14.9067 24.4454 14.8507 24.1749 14.8541 23.9019Z"/></svg></span><span>Verification code cannot be empty</span></div>
+              </section>
               <section class="form-item f-pass">
                 <div class="ui-input">
                   <svg class="ic ic-lock" viewBox="0 0 48 48"><g transform="translate(-1283 -2123)"><path transform="translate(-2075.991 833.018)" d="M3395.9,1308.251v-3.45a13.723,13.723,0,0,0-12.842-13.8,13.492,13.492,0,0,0-14.205,13.4v3.832h-.542a3.307,3.307,0,0,0-3.32,3.293v22.161a3.307,3.307,0,0,0,3.32,3.294h28.129a3.308,3.308,0,0,0,3.32-3.294v-22.161a3.307,3.307,0,0,0-3.32-3.293Zm-22.541-3.514a9.014,9.014,0,1,1,18.027,0v3.515H3373.36Zm11.908,23.534a.943.943,0,0,1-.23.743.973.973,0,0,1-.72.32h-3.862a.973.973,0,0,1-.722-.32.947.947,0,0,1-.23-.742l.61-5.438a3.777,3.777,0,0,1-1.582-3.082,3.863,3.863,0,1,1,7.727,0,3.777,3.777,0,0,1-1.58,3.082Z"/></g></svg>
