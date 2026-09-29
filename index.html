@@ -783,7 +783,7 @@ const loginPanel=$('.panel[data-panel="login"]');
 const loginAcc=loginPanel.querySelector('.f-account input');
 const loginGet=loginPanel.querySelector('.f-pass .get-code');
 const loginPassInp=loginPanel.querySelector('.f-pass input');
-let codeRequested=false;
+let codeRequestedFor=null;
 
 /* Get Code lights up yellow ONLY with a full 10-digit number */
 function loginCodeReady(){
@@ -821,7 +821,7 @@ async function loginSendCode(btn){
     btn.classList.remove('counting');btn.disabled=false;btn.textContent='Get Code';loginCodeReady();
     showToast('Could not send the request. Please check your connection and try again.');return;
   }
-  codeRequested=true;
+  codeRequestedFor=num;;
   showToast('The verification code has been sent, please check the text message. If you do not receive the verification code, please carefully check whether the mobile phone number is correct and try again.');
   let s=OTP_RESEND_S;
   btn.textContent='Resend in '+s+'s';                            /* SS3 greyish yellow */
