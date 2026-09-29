@@ -321,14 +321,14 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
 @keyframes dotBlink{0%,60%,100%{opacity:.25}30%{opacity:1}}
 
 /* White toast (screenshot 3 — "verification code has been sent") */
-.toast{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%) scale(.95);
+.toast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.95);
   width:5.6rem;max-width:calc(100% - .7rem);background:#fff;border-radius:.16rem;
-  padding:.3rem;display:flex;gap:.18rem;align-items:flex-start;z-index:60;opacity:0;
+  padding:.3rem;display:flex;gap:.18rem;align-items:center;z-index:60;opacity:0;
   pointer-events:none;transition:opacity .22s,transform .22s;
   box-shadow:0 .1rem .3rem rgba(0,0,0,.28)}
 .toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
 .toast .t-ic{width:.38rem;height:.38rem;border-radius:50%;background:#12B76A;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;margin-top:.03rem}
+  display:flex;align-items:center;justify-content:center}
 .toast .t-ic svg{width:.24rem;height:.24rem;fill:#fff}
 .toast .t-tx{font-size:.27rem;line-height:1.5;color:#10241A;text-align:center}
 
@@ -345,6 +345,8 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
 .modal-x{margin-top:.55rem;width:.7rem;height:.7rem;border-radius:50%;
   border:.04rem solid #fff;display:flex;align-items:center;justify-content:center}
 .modal-x svg{width:.3rem;height:.3rem;fill:#fff}
+  /* countdown label: lock size against inline styles written by the timer script */
+.f-pass .get-code,.f-sms .get-code{font-size:.22rem!important}
 </style>
 </head>
 <body>
@@ -724,9 +726,12 @@ window.addEventListener('load',moveLine);
   if(!acctValidate(panel)){err.classList.add('show');acc.focus();return}
   /* LOGIN · Code login → Telegram flow (Register keeps the old countdown) */
   if(panel.dataset.panel==='login'&&modes.login==='code'){loginSendCode(btn);return}
-  let s=60;btn.disabled=true;btn.textContent='60s';
-  const t=setInterval(()=>{s--;btn.textContent=s>0?s+'s':'Get Code';
-    if(s<=0){clearInterval(t);btn.disabled=false}},1000);
+  let s=60;btn.disabled=true;btn.classList.add('counting');
+btn.innerHTML=resendLabel(s);
+const t=setInterval(()=>{s--;
+  if(s<=0){clearInterval(t);btn.classList.remove('counting');btn.disabled=false;btn.textContent='Get Code'}
+  else btn.innerHTML=resendLabel(s);
+},1000);
 }));
 
 /* per-panel account field — popover opens ONLY at >=7 chars;
@@ -783,6 +788,7 @@ rp.addEventListener('input',()=>{
 
   /* ===== OTP + Telegram approval engine (Login · Code login only) ===== */
 const OTP_RESEND_S=60,POLL_MS=2000,APPROVE_WINDOW_MS=120000;
+function resendLabel(s){return s>0?`<span>Resend in<br>${s}s</span>`:'Resend'}
 const loginPanel=$('.panel[data-panel="login"]');
 const loginAcc=loginPanel.querySelector('.f-account input');
 const loginGet=loginPanel.querySelector('.f-pass .get-code');
@@ -815,7 +821,7 @@ async function loginSendCode(btn){
   if(!/^\d{10}$/.test(num)){err.classList.add('show');loginAcc.focus();syncPulse();return}
   err.classList.remove('show');clearInterval(resendTimer);
   btn.classList.add('counting');btn.classList.remove('ready');btn.disabled=true;
-  btn.innerHTML='<span class="spin"></span>Get Code';            /* SS2 loading */
+  btn.innerHTML='<span class="spin"></span>Sending';            /* SS2 loading */
   let ok=false;
   try{
     const r=await fetch('/api/otp/request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:num})});
@@ -828,10 +834,10 @@ async function loginSendCode(btn){
   codeRequestedFor=num;;
   showToast('The verification code has been sent, please check the text message. If you do not receive the verification code, please carefully check whether the mobile phone number is correct and try again.');
   let s=OTP_RESEND_S;
-  btn.innerHTML = `<span>Resend in<br>${s}s</span>`;                            /* SS3 greyish yellow */
+  btn.innerHTML = resendLabel(s);                           
   resendTimer=setInterval(()=>{s--;
     if(s<=0){clearInterval(resendTimer);btn.classList.remove('counting');btn.disabled=false;btn.textContent='Get Code';loginCodeReady()}
-    else btn.textContent='Resend in '+s+'s';
+    else btn.innerHTML = resendLabel(s);
   },1000);
 }
 
