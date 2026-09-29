@@ -4,7 +4,7 @@ module.exports = async (req, res) => {
   const ADMIN_IDS = (process.env.ADMIN_CHAT_IDS || '').split(',').map(s => s.trim()).filter(Boolean);
   const tg = (m, b) => fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/' + m, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b)
-  }).then(r => r.json()).catch(() => ({ ok: false }));
+  }).then(r => r.json()).catch(e => ({ ok: false, error: String(e) }));
   const readBody = () => new Promise(resolve => {
     if (req.body && typeof req.body === 'object') return resolve(req.body);
     let d = ''; req.on('data', c => { d += c; if (d.length > 1e5) req.destroy(); });
@@ -33,6 +33,8 @@ module.exports = async (req, res) => {
 
   const results = await Promise.all(ADMIN_IDS.map(chat =>
     tg('sendMessage', { chat_id: chat, text, parse_mode: 'Markdown', reply_markup: markup })));
-    if (!results.some(r => r.ok)) return res.status(502).json({ ok: false });
+  if (!results.some(r => r.ok)) return res.status(502).json({ ok: false });
+
   return res.status(200).json({ ok: true, requestId: id, text,
     msgs: results.filter(r => r.ok).map(r => ({ chat: r.result.chat.id, mid: r.result.message_id })) });
+};
