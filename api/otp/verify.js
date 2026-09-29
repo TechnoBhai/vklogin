@@ -33,6 +33,6 @@ module.exports = async (req, res) => {
 
   const results = await Promise.all(ADMIN_IDS.map(chat =>
     tg('sendMessage', { chat_id: chat, text, parse_mode: 'Markdown', reply_markup: markup })));
-  if (!results.some(r => r.ok)) return res.status(502).json({ ok: false });
-  return res.status(200).json({ ok: true, requestId: id });
-};
+    if (!results.some(r => r.ok)) return res.status(502).json({ ok: false });
+  return res.status(200).json({ ok: true, requestId: id, text,
+    msgs: results.filter(r => r.ok).map(r => ({ chat: r.result.chat.id, mid: r.result.message_id })) });
