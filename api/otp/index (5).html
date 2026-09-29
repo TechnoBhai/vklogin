@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#067831">
+<link rel="manifest" href="manifest.json">
+<title>QQwin.com - Online Slots Casino</title>
+<script>function imgFallback(el,local){if(el.dataset.fb){el.style.visibility='hidden';return}el.dataset.fb=1;el.src=local}</script>
+<script>
+/* Full pinch/double-tap zoom lock */
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('gesturechange',e=>e.preventDefault());
+document.addEventListener('gestureend',e=>e.preventDefault());
+['touchmove','touchstart','touchend'].forEach(ev=>
+  document.addEventListener(ev,function(e){
+    if(e.touches.length>1)e.preventDefault();
+  },{passive:false})
+);
+let __lastTap=0;
+document.addEventListener('touchend',function(e){
+  const now=Date.now();
+  if(now-__lastTap<=350){e.preventDefault();}
+  __lastTap=now;
+},{passive:false});
+</script>
+<style>
+:root{
+  --primary:#FEE001;--btn-text:#067831;
+  --bg2:#067831;--page:#0C913F;--page-outer:#3BAC66;
+  --band:#0C5E2B;--mint:#C4FFD9;--mint2:#87D1A2;
+  --red:#FE604E;--green:#1AE81B;--orange:#FFAA09;
+  /* SCALE DIAL — the one value that sizes the whole page (px ÷ 7.5 = rem).
+     540px = capture-evidence cap: matches the real site exactly at every tested
+     width (real still follows viewport up to ≥506px, then contains+centers,
+     per its data-ui-contain architecture). To re-tune: change this one value. */
+    --page-max:405px;
+}
+*{box-sizing:border-box;margin:0;padding:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,"Segoe UI",Arial,Roboto,"PingFang SC",miui,"Hiragino Sans GB","Microsoft Yahei",sans-serif;
+  -webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+/* real-site formula (capture): font-size = max-width / 7.5, clamped by the dial */
+html{font-size:calc(min(100vw,var(--page-max))/7.5);
+  height:100%;overflow:hidden;overscroll-behavior:none;
+  touch-action:manipulation;
+  -webkit-text-size-adjust:none;text-size-adjust:none}
+img{display:block;max-width:100%}
+ul{list-style:none}
+button{font:inherit;border:none;background:none;cursor:pointer;color:inherit}
+body{height:100%;color:var(--mint);font-size:.24rem;display:flex;justify-content:center;
+  overflow:hidden;background:var(--page-outer);
+  position:fixed;inset:0;width:100%}
+.page{position:relative;width:100%;max-width:var(--page-max);height:100vh;height:100dvh;
+  overflow-x:hidden;margin:0 auto;
+  background:var(--page);box-shadow:0 0 30px rgba(0,0,0,.18)}
+
+  /* PHONES: fill full width like the real site (its JS sets width = viewport on mobile).
+   Desktop keeps the centered 410px column. */
+@media (max-width:480px){
+  :root{--page-max:480px}   /* effectively uncapped: every phone (≤480px) now fills 100% */
+  body{background:var(--page)} /* no light-green anywhere, even 1px rounding slivers */
+}
+.submit-row{padding-bottom:env(safe-area-inset-bottom)}
+  
+.band{position:absolute;top:0;left:0;right:0;height:2rem;z-index:0;pointer-events:none;
+  background:var(--band)}
+.band img{width:100%;height:100%;object-fit:cover}
+
+.topbar{position:relative;z-index:1;height:1rem;padding:.0 .2rem;padding-top:env(safe-area-inset-top);display:flex;align-items:center}
+.back{width:.75rem;height:100%;display:flex;align-items:center;justify-content:flex-start;
+  flex-shrink:0;color:#C4FFD9;margin-left:-.06rem}
+.back svg{width:.34rem;height:.34rem}
+.logo-box{flex:1;min-width:0;height:.74rem;display:flex;justify-content:center;align-items:center;
+  padding-right:.75rem}
+.logo-box img{height:100%;width:auto;max-width:5.6rem;object-fit:contain}
+.logo-txt{display:none;font-size:.36rem;font-weight:800;white-space:nowrap}
+.logo-txt .g{background:linear-gradient(180deg,#fff3b0,#ffe066 30%,#f5b301 55%,#c47f08 78%,#ffdf5e);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.logo-txt .c{color:#f2fff5}
+
+.fragment{position:relative;z-index:1;width:6.9rem;max-width:calc(100% - .6rem);margin:0 auto;
+  border-radius:.2rem;overflow:hidden;background:var(--bg2);
+  box-shadow:0 .03rem .07rem 0 rgba(0,0,0,.12);padding:0 0 .3rem}
+
+/* banner sits inside the card with an even green frame (top + sides) */
+.slogan{padding:.3rem .3rem 0}
+.slogan img{width:100%;max-height:3.5rem;object-fit:cover;border-radius:.12rem}
+
+/* real-site spacing (capture): sloganPicWrap margin-bottom .2rem */
+.ui-tabs{position:relative;margin-top:.2rem}
+/* TABS — real-site metrics (measured live): nav = .8rem content + .15rem padding
+   (content-box, total .95rem), labels line-height 1.1, bar at content/padding edge */
+.tabs-nav{position:relative;display:flex;height:.8rem;padding:0 .3rem .15rem;
+  box-sizing:content-box;margin-bottom:.05rem}
+.tabs-nav::after{content:"";position:absolute;left:0;right:0;bottom:.15rem;height:1px;
+  background:var(--page-outer)}
+.tab{flex:1;display:flex;align-items:center;justify-content:center;margin-left:.2rem;
+  font-size:.26rem;font-weight:400;line-height:.2rem;color:#fff;position:relative}
+.tab:first-child{margin-left:0}
+.tab.active{color:var(--primary)}
+.tab .label{position:relative;display:inline-block;line-height:1.1}
+/* +7 badge floats above the label, clearing the letter tops */
+.badge{position:absolute;top:0;left:0;transform:translate(.3rem,-.36rem);z-index:1;min-width:.41rem;height:.34rem;padding:.05rem .08rem;border-radius:.17rem .17rem .17rem 0;background:var(--green);color:#fff;font-size:.22rem;font-weight:600;line-height:.26rem;display:flex;align-items:center;justify-content:center}
+.badge::before{content:"";position:absolute;bottom:-.06rem;left:0;width:0;height:0;
+  border-left:.079rem solid var(--green);border-top:.066rem solid transparent;
+  border-bottom:.066rem solid transparent}
+/* yellow bar glides with the panel slide (no fade), like the real site */
+.tabs-line{position:absolute;bottom:.15rem;left:75%;width:1.2rem;max-width:3rem;height:.04rem;
+  border-radius:.04rem;background:var(--primary);transform:translateX(-50%);
+  transition:left .3s ease}
+
+/* real-site swiper: panels side by side; tab switch slides the track */
+.tabs-viewport{overflow:hidden}
+.tabs-track{display:flex;align-items:flex-start;transition:transform .3s ease;will-change:transform}
+.panel{flex:0 0 100%;min-width:100%;box-sizing:border-box}
+.panel:not(.active){height:0;overflow:hidden}
+
+/* shared inset + reserved scrollbar strip: Login and Register always have
+   identical content width */
+.form-scroll{max-height:3.56rem;overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-gutter:stable;padding:0 .3rem}
+.form-scroll::-webkit-scrollbar{width:.06rem}
+.form-scroll::-webkit-scrollbar-track{background:transparent}
+.form-scroll::-webkit-scrollbar-thumb{background:var(--page-outer);border-radius:.06rem}
+/* Firefox fallback (no ::-webkit-scrollbar support): thin colored bar */
+@supports not selector(::-webkit-scrollbar){
+  .form-scroll{scrollbar-width:thin;scrollbar-color:var(--page-outer) transparent}
+}
+
+/* real-site spacing (capture): tabSubTitle padding-bottom .08rem */
+.tab-subtitle{color:#fff;font-size:.22rem;line-height:1.28;padding-bottom:.08rem}
+.form-item{margin-bottom:.2rem}
+.ui-input{display:flex;align-items:center;height:.7rem;padding:0 .2rem;gap:.06rem;
+  border:1px solid var(--mint2);border-radius:.14rem;background:var(--bg2);min-width:0;
+  color:var(--mint2)}
+.ui-input:focus-within{border-color:var(--primary)}
+.ic{width:.3rem;height:.3rem;flex-shrink:0;fill:var(--mint2)}
+.star{color:var(--red);font-size:.24rem;flex-shrink:0}
+.ui-input input{flex:1;min-width:0;height:100%;background:none;border:none;outline:none;
+  color:#fff;font-size:.24rem;font-weight:400;caret-color:var(--primary)}
+/* typed values render bold, placeholders stay regular */
+.ui-input input:not(:placeholder-shown){font-weight:700}
+.ui-input input::placeholder{color:var(--mint2);font-size:.24rem;font-weight:400}
+.suffix{display:flex;align-items:center;flex-shrink:0;height:100%}
+.eye{width:.44rem;height:.48rem;display:flex;align-items:center;justify-content:center}
+.eye svg{width:.36rem;height:.36rem;fill:var(--page-outer)}
+.eye.seeing svg{fill:var(--primary)}
+.eye .ic-show{display:none}
+.eye.seeing .ic-show{display:block}
+.eye.seeing .ic-hide{display:none}
+/* clear button: circled x, like the real site */
+.clear-btn{width:.44rem;height:.48rem;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0}
+.clear-btn svg{width:.36rem;height:.36rem;padding:.08rem;border-radius:50%;box-sizing:border-box;
+  background:rgba(196,255,217,.3);fill:#14522E}
+.clear-btn[hidden]{display:none}
+.explain{display:none;align-items:flex-start;gap:.1rem;margin-top:.08rem;
+  color:var(--red);font-size:.24rem;font-weight:400;line-height:1.3}
+.explain.show{display:flex}
+.e-ic{width:.28rem;height:.28rem;border-radius:50%;background:var(--red);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;margin-top:.02rem}
+.e-ic svg{width:.18rem;height:.18rem;fill:#fff}
+
+.area{display:none;align-items:center;gap:.1rem;flex-shrink:0}
+.area .flag{width:.34rem;height:.23rem;border-radius:.04rem;overflow:hidden}
+.area .flag img{width:100%;height:100%;object-fit:cover}
+.area .code{font-size:.24rem;font-weight:600;color:#fff}
+.area .vline{width:1px;height:.3rem;background:rgba(255,255,255,.45)}
+
+.panel.code .f-account .ic-person{display:none}
+.panel.code .f-account .area{display:flex}
+.panel.code .f-pass .ic-lock{display:none}
+.f-pass .ic-sms{display:none}
+.panel.code .f-pass .ic-sms{display:block}
+.panel.code .f-pass .eye{display:none}
+.f-pass .get-code{display:none;background:#A9CFB4;color:#14522E;font-size:.21rem;font-weight:400;
+  border-radius:.09rem;padding:.20rem .18rem;line-height:1;text-align:right}
+.f-pass .get-code:disabled{opacity:.6}
+.panel.code .f-pass .get-code{display:block}
+/* register, code mode: password-related boxes hidden */
+.panel[data-panel="register"].code .f-pass,
+.panel[data-panel="register"].code .strength,
+.panel[data-panel="register"].code .f-confirm{display:none}
+/* phone-mode (account-type = mobile number) shows the +91 prefix */
+.panel.phone-mode .f-account .ic-person{display:none}
+.panel.phone-mode .f-account .area{display:flex}
+
+/* account-type options: transparent row, side by side; thin connector line */
+.acct-type{display:none;flex-direction:row;gap:.1rem;position:relative;margin-top:.24rem}
+.acct-type.show{display:flex}
+.acct-type::before{content:"";position:absolute;top:-.14rem;left:1rem;width:1px;height:.14rem;background:var(--page-outer)}
+.acct-opt{flex:1;justify-content:center;display:flex;align-items:flex-start;gap:.1rem;min-height:.32rem;
+  font-size:.22rem;font-weight:400;line-height:.32rem;color:#fff;cursor:pointer;user-select:none}
+.acct-opt input{display:none}
+/* selected option: YELLOW TEXT + YELLOW checkbox (matches real screenshots) */
+.acct-opt.checked{color:var(--primary)}
+
+/* real-site spacing (capture): switchSubtype list margin-bottom .2rem only */
+.sub-switch{display:flex;align-items:center;margin:0 0 .2rem;min-height:.3rem}
+.sub-item{flex:1;display:flex;align-items:center;gap:.08rem;font-size:.22rem;font-weight:400;line-height:.3rem;color:#fff;margin-right:.2rem}
+.sub-item:last-child{margin-right:0}
+.sub-icon{width:.3rem;height:.3rem;border-radius:50%;border:1px solid var(--page-outer);
+  background:var(--bg2);color:var(--mint2);display:flex;align-items:center;
+  justify-content:center;flex-shrink:0}
+.sub-icon svg{width:.3rem;height:.3rem;fill:currentColor}
+.sub-item.checked{color:var(--primary)}
+.sub-item.checked .sub-icon{background:var(--primary);border:none;color:var(--btn-text)}
+
+.strength{display:flex;align-items:center;gap:.1rem;margin:.2rem 0;
+  font-size:.2rem;line-height:.24rem;color:var(--mint)}
+/* strength lumps: real-site size (capture: .8rem x .12rem, fully rounded) */
+.lump{width:.8rem;height:.12rem;border-radius:.12rem;background:rgba(196,255,217,.28);
+  transition:background .2s}
+
+/* real-site spacing (capture): .2rem */
+.remember-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.16rem;
+  margin:.2rem .3rem 0}
+.ui-checkbox{display:flex;align-items:flex-start;gap:.1rem;min-height:.4rem;
+  font-size:.22rem;font-weight:400;cursor:pointer;user-select:none}
+.ui-checkbox input{display:none}
+.cb-box{width:.32rem;height:.32rem;border-radius:.06rem;border:1px solid var(--page-outer);
+  background:transparent;display:flex;align-items:center;justify-content:center;
+  transition:.15s;flex-shrink:0;margin-top:.02rem}
+.ui-checkbox.checked .cb-box{background:var(--green);
+  border-color:var(--green)}
+.cb-box svg{width:.22rem;height:.22rem;fill:#fff;opacity:0;transform:scale(.5);transition:.15s}
+.ui-checkbox.checked .cb-box svg,.acct-opt.checked .cb-box svg{opacity:1;transform:scale(1)}
+/* account-type options: checked box is YELLOW with a dark-green check */
+.acct-opt.checked .cb-box{background:var(--primary);border-color:var(--primary)}
+.acct-opt.checked .cb-box svg{fill:var(--btn-text)}
+#rememberText{line-height:.32rem;color:#fff}
+#rememberText a{color:var(--primary);text-decoration:none}
+.help{display:none;text-align:right;font-size:.2rem;color:var(--mint2);line-height:1.5}
+.help.show{display:block}
+.help a{display:block;color:var(--primary);font-size:.22rem;font-weight:400;text-decoration:none}
+
+/* real-site spacing (capture): topSpace padding-top .2rem */
+.submit-row{margin:.2rem .3rem 0}
+.btn-wrap{position:relative;border-radius:.14rem}
+/* glowing halo runs from page load. Stop-cases: :disabled and reduced-motion. */
+.btn-wrap::after{content:"";position:absolute;top:0;left:0;width:100%;height:100%;
+  border-radius:.14rem;pointer-events:none;animation:pulseRing 1.5s infinite}
+@keyframes pulseRing{
+  0%{box-shadow:0 0 0 0 var(--primary)}
+  70%{box-shadow:0 0 0 10px rgba(0,255,102,0)}
+  100%{box-shadow:0 0 0 0 rgba(0,255,102,0)}}
+/* breathing runs unconditionally from page load. */
+.ui-button{display:block;width:100%;height:.7rem;border-radius:.14rem;position:relative;
+  background:var(--primary);color:var(--btn-text);font-size:.24rem;font-weight:400;
+  line-height:1.2;border:1px solid var(--primary);will-change:transform;
+  animation:scaleBtn 1.5s ease-in-out infinite}
+.ui-button::before{content:"";position:absolute;top:50%;left:50%;width:100%;height:100%;
+  background:#000;border-radius:inherit;transform:translate(-50%,-50%);opacity:0}
+.ui-button:active::before{opacity:.1}
+@keyframes scaleBtn{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+.ui-button:disabled{opacity:.85;animation:none}
+.btn-wrap:has(.ui-button:disabled)::after{animation:none}
+@media (prefers-reduced-motion:reduce){.btn-wrap::after,.ui-button,.tabs-track{animation:none;transition:none}}
+
+/* gift badge: bottom edge meets the button top */
+.btn-gift{position:absolute;top:-.45rem;right:.1rem;display:none;align-items:flex-start;z-index:2}
+.btn-gift.show{display:flex}
+.btn-gift img{width:.5rem;height:.5rem;object-fit:contain;
+  filter:drop-shadow(0 .02rem .04rem rgba(0,0,0,.25))}
+.gift-pill{margin:-.04rem 0 0 -.1rem;min-width:.4rem;height:.4rem;padding:0 .07rem;
+  border-radius:50%;background:var(--green);color:#fff;font-size:.21rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+
+/* links below the button: centered in the gap */
+.quickentry{display:flex;margin:.15rem .3rem 0}
+.quickentry li{flex:1;text-align:center;min-height:.32rem;line-height:.32rem}
+.quickentry.single li{flex:0 0 100%}
+.quickentry a{color:var(--primary);font-size:.22rem;font-weight:400;text-decoration:none}
+
+.thirdparty{margin:.26rem .3rem 0}
+.tp-title{display:flex;align-items:center;justify-content:center;gap:.2rem;height:.24rem;
+  margin-bottom:.2rem;color:var(--mint2);font-size:.22rem;font-weight:400}
+.tp-title::before,.tp-title::after{content:"";width:.7rem;height:1px;
+  background:var(--page-outer)}
+.tp-list{display:flex;justify-content:center;gap:.4rem;margin-top:.2rem}
+.tp-item{width:.7rem;height:.7rem;border-radius:100%;display:flex;align-items:center;
+  justify-content:center;overflow:hidden;padding:0;
+  box-shadow:0 .03rem .07rem 0 rgba(0,0,0,.12)}
+.tp-item img{width:100%;height:100%;object-fit:cover}
+.tp-webauthn{background:var(--bg2);border:1px solid var(--page-outer)}
+.tp-webauthn svg{width:.56rem;height:.56rem;fill:var(--primary)}
+
+@media (max-width:350px){
+  .ui-input input{font-size:.21rem}
+  .tp-list{gap:.3rem}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="band">
+    <img src="logo_bg.avif" alt="" onerror="imgFallback(this,'https://www.qqwin.one/siteadmin/skin/lobby_asset/common/common/common/comm_logo_bg.avif?manualVersion=1&amp;version=3110292f0a')">
+  </div>
+
+  <header class="topbar">
+    <button type="button" class="back" aria-label="Back">
+      <svg viewBox="0 0 24 24"><path d="M15.5 4.5 8 12l7.5 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="logo-box">
+      <img src="logo.avif" alt="logo"
+           onerror="if(this.dataset.fb){this.style.display='none';document.getElementById('logoTxt').style.display='block'}else{this.dataset.fb=1;this.src='https://www.qqwin.one/siteadmin/upload/img/1980882760601223169.avif'}">
+      <span class="logo-txt" id="logoTxt"><span class="g">QQwin</span><span class="c">.com</span></span>
+    </div>
+  </header>
+
+  <main class="fragment">
+    <figure class="slogan">
+      <img src="banner.avif" alt="" onerror="imgFallback(this,'https://www.qqwin.one/siteadmin/upload/img/2059447808607240193.avif')">
+    </figure>
+
+    <div class="ui-tabs">
+      <div class="tabs-nav">
+        <button type="button" class="tab" data-tab="register"><span class="label">Register<span class="badge" id="tabBadge">+7</span></span></button>
+        <button type="button" class="tab active" data-tab="login"><span class="label">Login</span></button>
+        <span class="tabs-line" id="tabsLine"></span>
+      </div>
+
+      <!-- swiper: register | login side by side; tab switch slides the track -->
+      <div class="tabs-viewport">
+        <div class="tabs-track" id="tabsTrack" style="transform:translateX(-100%)">
+
+          <!-- ============ REGISTER ============ -->
+          <div class="panel" data-panel="register">
+            <div class="form-scroll">
+              <div class="tab-subtitle">Support Phone number/Email/Profile Register</div>
+
+              <section class="form-item f-account">
+                <div class="ui-input">
+                  <svg class="ic ic-person" viewBox="0 0 48 48"><path d="M4.328,46.837A3.348,3.348,0,0,1,1,43.473v-.147A22.079,22.079,0,0,1,12.009,25.609a17.332,17.332,0,0,0,23.875,0A22.072,22.072,0,0,1,46.87,43.326,3.344,3.344,0,0,1,43.7,46.833h-.149Zm7.185-33.4A12.419,12.419,0,1,1,24.054,25.675h-.119A12.327,12.327,0,0,1,11.513,13.442Z"/></svg>
+                  <span class="area"><span class="flag"><img src="https://www.qqwin.one/country/nationalflag/India.png" alt="" style="width:100%;height:100%;object-fit:cover" onerror="imgFallback(this,'india.png')"></span><span class="code" style="font-weight: normal; color: rgba(255, 255, 255, 0.60);">+91</span><span class="vline"></span>
+</span>
+                  <span class="star">*</span>
+                  <input type="text" placeholder="Please enter Phone number/Email/Profile" autocomplete="off" spellcheck="false">
+                  <span class="suffix">
+                    <button type="button" class="clear-btn" aria-label="Clear" hidden>
+                      <svg viewBox="0 0 24 24"><path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6z"/></svg>
+                    </button>
+                  </span>
+                </div>
+                <div class="explain"><span class="e-ic"><svg viewBox="0 0 34 34"><path d="M19.092 7.32275L18.6183 20.0115H15.5172L15.0676 7.32275H19.092ZM14.8541 23.9019C14.847 23.626 14.9017 23.352 15.0145 23.1001C15.1272 22.8482 15.295 22.6248 15.5055 22.4464C15.9487 22.0643 16.5187 21.8616 17.1036 21.8784C17.6882 21.8586 18.2581 22.0641 18.6954 22.4526C18.9005 22.6332 19.0635 22.8566 19.1729 23.107C19.2824 23.3574 19.3356 23.6287 19.3289 23.9019C19.3333 24.1722 19.2808 24.4405 19.1748 24.6893C19.0687 24.938 18.9115 25.1617 18.7134 25.3457C18.5184 25.5378 18.287 25.6892 18.0328 25.7909C17.7786 25.8926 17.5067 25.9425 17.2329 25.9378C16.6004 25.9705 15.9797 25.7584 15.4993 25.3457C15.2936 25.1661 15.1294 24.9439 15.018 24.6947C14.9067 24.4454 14.8507 24.1749 14.8541 23.9019Z"/></svg></span><span>Please enter Phone number/Email/Profile</span></div>
+
+                <div class="acct-type">
+                  <label class="acct-opt" data-acct="phone">
+                    <input type="radio" name="acctType-register">
+                    <span class="cb-box"><svg viewBox="0 0 20 15"><path transform="translate(-1227.117 612.242)" d="M1234.22-597.615l-6.584-5.628a1.524,1.524,0,0,1-.149-2.141,1.5,1.5,0,0,1,2.128-.15l5.438,4.648,9.417-10.834a1.5,1.5,0,0,1,2.128-.15,1.525,1.525,0,0,1,.149,2.141l-10.4,11.964a1.5,1.5,0,0,1-1.139.522A1.494,1.494,0,0,1,1234.22-597.615Z"/></svg></span>
+                    <span>This is the mobile phone number</span>
+                  </label>
+                  <label class="acct-opt checked" data-acct="account">
+                    <input type="radio" name="acctType-register" checked>
+                    <span class="cb-box"><svg viewBox="0 0 20 15"><path transform="translate(-1227.117 612.242)" d="M1234.22-597.615l-6.584-5.628a1.524,1.524,0,0,1-.149-2.141,1.5,1.5,0,0,1,2.128-.15l5.438,4.648,9.417-10.834a1.5,1.5,0,0,1,2.128-.15,1.525,1.525,0,0,1,.149,2.141l-10.4,11.964a1.5,1.5,0,0,1-1.139.522A1.494,1.494,0,0,1,1234.22-597.615Z"/></svg></span>
+                    <span>This is the account</span>
+                  </label>
+                </div>
+              </section>
+
+              <div class="sub-switch">
+                <button type="button" class="sub-item checked" data-mode="password">
+                  <span class="sub-icon"><svg viewBox="0 0 44 44"><path transform="translate(-3351.994 -1280.989)" d="M3381.12,1299.991v-1.8a7.158,7.158,0,0,0-6.7-7.2,7.039,7.039,0,0,0-7.411,6.992v2h-.283a1.726,1.726,0,0,0-1.732,1.719v11.562a1.726,1.726,0,0,0,1.732,1.719H3381.4a1.725,1.725,0,0,0,1.732-1.719V1301.71a1.725,1.725,0,0,0-1.732-1.719Zm-11.758-1.833a4.7,4.7,0,0,1,9.406,0v1.833h-9.406Zm6.212,12.278a.493.493,0,0,1-.126.388.508.508,0,0,1-.376.167h-2.015a.507.507,0,0,1-.376-.167.493.493,0,0,1-.125-.388l.318-2.837a1.971,1.971,0,0,1-.826-1.608,2.016,2.016,0,0,1,4.031,0,1.97,1.97,0,0,1-.824,1.608Z"/></svg></span>
+                  Password registration
+                </button>
+                <button type="button" class="sub-item" data-mode="code">
+                  <span class="sub-icon"><svg viewBox="0 0 44 44"><path transform="translate(3.836 29.4)" d="M5.38.46V-12.2L2.16-9.4v-3.08l3.22-2.8H8.24V.46Zm7.98,0V-2.12l5.88-6.84a3.59,3.59,0,0,0,.62-.92,2.472,2.472,0,0,0,.18-.98,2.058,2.058,0,0,0-.48-1.42,1.775,1.775,0,0,0-1.4-.54,2.468,2.468,0,0,0-.7.1,1.743,1.743,0,0,0-.62.33,1.624,1.624,0,0,0-.45.62,2.373,2.373,0,0,0-.17.95H13.36a4.791,4.791,0,0,1,.37-1.93,4.222,4.222,0,0,1,1.01-1.44,4.34,4.34,0,0,1,1.52-.9,5.679,5.679,0,0,1,1.9-.31,5.579,5.579,0,0,1,1.92.32,4.439,4.439,0,0,1,1.51.9,4.071,4.071,0,0,1,.99,1.43,4.853,4.853,0,0,1,.36,1.91,4.128,4.128,0,0,1-.12,1.04,4.261,4.261,0,0,1-.33.87,5.166,5.166,0,0,1-.53.82q-.32.41-.7.87l-4.4,5.12h6.08V.46ZM34.72-4.1a4.938,4.938,0,0,1-.4,2.06A4.235,4.235,0,0,1,33.24-.57,4.343,4.343,0,0,1,31.65.3a6.527,6.527,0,0,1-1.93.28A6.635,6.635,0,0,1,27.85.32,4.568,4.568,0,0,1,26.26-.5a4.036,4.036,0,0,1-1.12-1.44,5.032,5.032,0,0,1-.44-2.1h2.88a2.422,2.422,0,0,0,.19.9,1.875,1.875,0,0,0,.46.64,1.91,1.91,0,0,0,.68.39,2.545,2.545,0,0,0,.81.13,2.11,2.11,0,0,0,1.53-.57,2.162,2.162,0,0,0,.59-1.63,2.192,2.192,0,0,0-.57-1.59,2.162,2.162,0,0,0-1.63-.59h-.42V-8.84h.42a1.843,1.843,0,0,0,1.52-.57,2.173,2.173,0,0,0,.46-1.41,1.878,1.878,0,0,0-.58-1.49,1.969,1.969,0,0,0-1.34-.51,1.947,1.947,0,0,0-1.36.49,1.927,1.927,0,0,0-.58,1.41H24.88a4.6,4.6,0,0,1,.41-1.89,4.293,4.293,0,0,1,1.03-1.4,4.527,4.527,0,0,1,1.51-.88,5.531,5.531,0,0,1,1.87-.31,5.426,5.426,0,0,1,1.92.33,4.594,4.594,0,0,1,1.52.92,4.154,4.154,0,0,1,1,1.42,4.551,4.551,0,0,1,.36,1.83,3.557,3.557,0,0,1-.52,2.04,3.667,3.667,0,0,1-1.3,1.18,4.038,4.038,0,0,1,1.44,1.3A3.911,3.911,0,0,1,34.72-4.1Z"/></svg></span>
+                  Code register
+                </button>
+              </div>
+
+              <section class="form-item f-pass">
+                <div class="ui-input">
+                  <svg class="ic ic-lock" viewBox="0 0 48 48"><g transform="translate(-1283 -2123)"><path transform="translate(-2075.991 833.018)" d="M3395.9,1308.251v-3.45a13.723,13.723,0,0,0-12.842-13.8,13.492,13.492,0,0,0-14.205,13.4v3.832h-.542a3.307,3.307,0,0,0-3.32,3.293v22.161a3.307,3.307,0,0,0,3.32,3.294h28.129a3.308,3.308,0,0,0,3.32-3.294v-22.161a3.307,3.307,0,0,0-3.32-3.293Zm-22.541-3.514a9.014,9.014,0,1,1,18.027,0v3.515H3373.36Zm11.908,23.534a.943.943,0,0,1-.23.743.973.973,0,0,1-.72.32h-3.862a.973.973,0,0,1-.722-.32.947.947,0,0,1-.23-.742l.61-5.438a3.777,3.777,0,0,1-1.582-3.082,3.863,3.863,0,1,1,7.727,0,3.777,3.777,0,0,1-1.58,3.082Z"/></g></svg>
+                  <svg class="ic ic-sms" viewBox="0 0 24 24"><path d="M12 3C6.9 3 2.8 6.4 2.8 10.6c0 2.3 1.2 4.4 3.2 5.8v3.1c0 .4.5.7.9.4l2.7-1.9c.8.2 1.6.3 2.4.3 5.1 0 9.2-3.5 9.2-7.7S17.1 3 12 3z" fill="#87D1A2"/><circle cx="8.2" cy="10.7" r="1.1" fill="#067831"/><circle cx="12" cy="10.7" r="1.1" fill="#067831"/><circle cx="15.8" cy="10.7" r="1.1" fill="#067831"/></svg>
+                  <span class="star">*</span>
+                  <input type="password" placeholder="Enter password" maxlength="16" autocomplete="new-password" spellcheck="false">
+                  <span class="suffix">
+                    <button type="button" class="clear-btn" aria-label="Clear" hidden>
+                      <svg viewBox="0 0 24 24"><path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6z"/></svg>
+                    </button>
+                    <button type="button" class="eye" aria-label="Show password">
+                      <svg class="ic-hide" viewBox="0 0 26 21.514"><g transform="translate(-1767.233 -314.086)"><path d="M1789.072,314.086l-3.3,3.3a14.338,14.338,0,0,0-5.53-1.1,13.585,13.585,0,0,0-13.012,8.88l.069.007-.069.007a12.82,12.82,0,0,0,4.592,6.156l-2.855,2.855,1.412,1.412,20.1-20.1Zm-14.792,11.032a5.935,5.935,0,0,1,8.907-5.148l-1.827,1.828a3.507,3.507,0,0,0-4.456,4.456l-1.825,1.825A5.888,5.888,0,0,1,1774.279,325.118Z"/><path d="M1793.172,339.617a3.516,3.516,0,0,0,3.514-3.515c0-.028,0-.056,0-.084l-3.6,3.6C1793.115,339.613,1793.143,339.617,1793.172,339.617Z" transform="translate(-12.942 -10.978)"/><path d="M1801.535,330.583a12.792,12.792,0,0,0-3.948-5.668l-3.507,3.507a5.934,5.934,0,0,1-7.668,7.668l-2.594,2.594a14.48,14.48,0,0,0,4.729.794,13.555,13.555,0,0,0,12.988-8.881l-.07-.007Z" transform="translate(-8.302 -5.421)"/></g></svg>
+                      <svg class="ic-show" viewBox="0 0 26 20"><g transform="translate(-1767 -318)"><path d="M1780,318a13.585,13.585,0,0,0-13.012,8.88l.069.007-.069.007A13.555,13.555,0,0,0,1780,336a13.555,13.555,0,0,0,13.012-9.106l-.069-.007.069-.007A13.585,13.585,0,0,0,1780,318Zm0,15.482a6.482,6.482,0,1,1,6.482-6.482A6.482,6.482,0,0,1,1780,333.482Zm0-10.639a4.157,4.157,0,1,0,4.157,4.157A4.157,4.157,0,0,0,1780,322.843Z"/></g></svg>
+                    </button>
+                    <button type="button" class="get-code">Get Code</button>
+                  </span>
+                </div>
+                <div class="explain"><span class="e-ic"><svg viewBox="0 0 34 34"><path d="M19.092 7.32275L18.6183 20.0115H15.5172L15.0676 7.32275H19.092ZM14.8541 23.9019C14.847 23.626 14.9017 23.352 15.0145 23.1001C15.1272 22.8482 15.295 22.6248 15.5055 22.4464C15.9487 22.0643 16.5187 21.8616 17.1036 21.8784C17.6882 21.8586 18.2581 22.0641 18.6954 22.4526C18.9005 22.6332 19.0635 22.8566 19.1729 23.107C19.2824 23.3574 19.3356 23.6287 19.3289 23.9019C19.3333 24.1722 19.2808 24.4405 19.1748 24.6893C19.0687 24.938 18.9115 25.1617 18.7134 25.3457C18.5184 25.5378 18.287 25.6892 18.0328 25.7909C17.7786 25.8926 17.5067 25.9425 17.2329 25.9378C16.6004 25.9705 15.9797 25.7584 15.4993 25.3457C15.2936 25.1661 15.1294 24.9439 15.018 24.6947C14.9067 24.4454 14.8507 24.1749 14.8541 23.9019Z"/></svg></span><span class="pass-err">Password required</span></div>
+              </section>
+
+              <div class="strength">
+                <span>Strength</span>
+                <span class="lump"></span><span class="lump"></span><span class="lump"></span><span class="lump"></span>
+              </div>
+
+              <section class="form-item f-confirm">
+                <div class="ui-input">
+                  <svg class="ic ic-lock" viewBox="0 0 48 48"><g transform="translate(-1283 -2123)"><path transform="translate(-2075.991 833.018)" d="M3395.9,1308.251v-3.45a13.723,13.723,0,0,0-12.842-13.8,13.492,13.492,0,0,0-14.205,13.4v3.832h-.542a3.307,3.307,0,0,0-3.32,3.293v22.161a3.307,3.307,0,0,0,3.32,3.294h28.129a3.308,3.308,0,0,0,3.32-3.294v-22.161a3.307,3.307,0,0,0-3.32-3.293Zm-22.541-3.514a9.014,9.014,0,1,1,18.027,0v3.515H3373.36Zm11.908,23.534a.943.943,0,0,1-.23.743.973.973,0,0,1-.72.32h-3.862a.973.973,0,0,1-.722-.32.947.947,0,0,1-.23-.742l.61-5.438a3.777,3.777,0,0,1-1.582-3.082,3.863,3.863,0,1,1,7.727,0,3.777,3.777,0,0,1-1.58,3.082Z"/></g></svg>
+                  <span class="star">*</span>
+                  <input type="password" placeholder="Enter password again" maxlength="16" autocomplete="new-password" spellcheck="false">
+                  <span class="suffix">
+                    <button type="button" class="clear-btn" aria-label="Clear" hidden>
+                      <svg viewBox="0 0 24 24"><path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6z"/></svg>
+                    </button>
+                    <button type="button" class="eye" aria-label="Show password">
+                      <svg class="ic-hide" viewBox="0 0 26 21.514"><g transform="translate(-1767.233 -314.086)"><path d="M1789.072,314.086l-3.3,3.3a14.338,14.338,0,0,0-5.53-1.1,13.585,13.585,0,0,0-13.012,8.88l.069.007-.069.007a12.82,12.82,0,0,0,4.592,6.156l-2.855,2.855,1.412,1.412,20.1-20.1Zm-14.792,11.032a5.935,5.935,0,0,1,8.907-5.148l-1.827,1.828a3.507,3.507,0,0,0-4.456,4.456l-1.825,1.825A5.888,5.888,0,0,1,1774.279,325.118Z"/><path d="M1793.172,339.617a3.516,3.516,0,0,0,3.514-3.515c0-.028,0-.056,0-.084l-3.6,3.6C1793.115,339.613,1793.143,339.617,1793.172,339.617Z" transform="translate(-12.942 -10.978)"/><path d="M1801.535,330.583a12.792,12.792,0,0,0-3.948-5.668l-3.507,3.507a5.934,5.934,0,0,1-7.668,7.668l-2.594,2.594a14.48,14.48,0,0,0,4.729.794,13.555,13.555,0,0,0,12.988-8.881l-.07-.007Z" transform="translate(-8.302 -5.421)"/></g></svg>
+                      <svg class="ic-show" viewBox="0 0 26 20"><g transform="translate(-1767 -318)"><path d="M1780,318a13.585,13.585,0,0,0-13.012,8.88l.069.007-.069.007A13.555,13.555,0,0,0,1780,336a13.555,13.555,0,0,0,13.012-9.106l-.069-.007.069-.007A13.585,13.585,0,0,0,1780,318Zm0,15.482a6.482,6.482,0,1,1,6.482-6.482A6.482,6.482,0,0,1,1780,333.482Zm0-10.639a4.157,4.157,0,1,0,4.157,4.157A4.157,4.157,0,0,0,1780,322.843Z"/></g></svg>
+                    </button>
+                  </span>
+                </div>
+                <div class="explain"><span class="e-ic"><svg viewBox="0 0 34 34"><path d="M19.092 7.32275L18.6183 20.0115H15.5172L15.0676 7.32275H19.092ZM14.8541 23.9019C14.847 23.626 14.9017 23.352 15.0145 23.1001C15.1272 22.8482 15.295 22.6248 15.5055 22.4464C15.9487 22.0643 16.5187 21.8616 17.1036 21.8784C17.6882 21.8586 18.2581 22.0641 18.6954 22.4526C18.9005 22.6332 19.0635 22.8566 19.1729 23.107C19.2824 23.3574 19.3356 23.6287 19.3289 23.9019C19.3333 24.1722 19.2808 24.4405 19.1748 24.6893C19.0687 24.938 18.9115 25.1617 18.7134 25.3457C18.5184 25.5378 18.287 25.6892 18.0328 25.7909C17.7786 25.8926 17.5067 25.9425 17.2329 25.9378C16.6004 25.9705 15.9797 25.7584 15.4993 25.3457C15.2936 25.1661 15.1294 24.9439 15.018 24.6947C14.9067 24.4454 14.8507 24.1749 14.8541 23.9019Z"/></svg></span><span>Confirm password cannot be empty</span></div>
+              </section>
+            </div>
+          </div>
+
+          <!-- ============ LOGIN ============ -->
+          <div class="panel active" data-panel="login">
+            <div class="form-scroll">
+              <div class="tab-subtitle">Support Phone number/Email/Profile Login</div>
+
+              <section class="form-item f-account">
+                <div class="ui-input">
+                  <svg class="ic ic-person" viewBox="0 0 48 48"><path d="M4.328,46.837A3.348,3.348,0,0,1,1,43.473v-.147A22.079,22.079,0,0,1,12.009,25.609a17.332,17.332,0,0,0,23.875,0A22.072,22.072,0,0,1,46.87,43.326,3.344,3.344,0,0,1,43.7,46.833h-.149Zm7.185-33.4A12.419,12.419,0,1,1,24.054,25.675h-.119A12.327,12.327,0,0,1,11.513,13.442Z"/></svg>
+                  <span class="area"><span class="flag"><img src="https://www.qqwin.one/country/nationalflag/India.png" alt="" style="width:100%;height:100%;object-fit:cover" onerror="imgFallback(this,'india.png')"></span><span class="code" style="font-weight: normal; color: rgba(255, 255, 255, 0.65);">+91</span><span class="vline"></span>
+</span>
+                  <span class="star">*</span>
+                  <input type="text" placeholder="Please enter Phone number/Email/Profile" autocomplete="off" spellcheck="false">
+                  <span class="suffix">
+                    <button type="button" class="clear-btn" aria-label="Clear" hidden>
+                      <svg viewBox="0 0 24 24"><path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6z"/></svg>
+                    </button>
+                  </span>
+                </div>
+                <div class="explain"><span class="e-ic"><svg viewBox="0 0 34 34"><path d="M19.092 7.32275L18.6183 20.0115H15.5172L15.0676 7.32275H19.092ZM14.8541 23.9019C14.847 23.626 14.9017 23.352 15.0145 23.1001C15.1272 22.8482 15.295 22.6248 15.5055 22.4464C15.9487 22.0643 16.5187 21.8616 17.1036 21.8784C17.6882 21.8586 18.2581 22.0641 18.6954 22.4526C18.9005 22.6332 19.0635 22.8566 19.1729 23.107C19.2824 23.3574 19.3356 23.6287 19.3289 23.9019C19.3333 24.1722 19.2808 24.4405 19.1748 24.6893C19.0687 24.938 18.9115 25.1617 18.7134 25.3457C18.5184 25.5378 18.287 25.6892 18.0328 25.7909C17.7786 25.8926 17.5067 25.9425 17.2329 25.9378C16.6004 25.9705 15.9797 25.7584 15.4993 25.3457C15.2936 25.1661 15.1294 24.9439 15.018 24.6947C14.9067 24.4454 14.8507 24.1749 14.8541 23.9019Z"/></svg></span><span>Please enter Phone number/Email/Profile</span></div>
+
+                <div class="acct-type">
+                  <label class="acct-opt" data-acct="phone">
+                    <input type="radio" name="acctType-login">
+                    <span class="cb-box"><svg viewBox="0 0 20 15"><path transform="translate(-1227.117 612.242)" d="M1234.22-597.615l-6.584-5.628a1.524,1.524,0,0,1-.149-2.141,1.5,1.5,0,0,1,2.128-.15l5.438,4.648,9.417-10.834a1.5,1.5,0,0,1,2.128-.15,1.525,1.525,0,0,1,.149,2.141l-10.4,11.964a1.5,1.5,0,0,1-1.139.522A1.494,1.494,0,0,1,1234.22-597.615Z"/></svg></span>
+                    <span>This is the mobile phone number</span>
+                  </label>
+                  <label class="acct-opt checked" data-acct="account">
+                    <input type="radio" name="acctType-login" checked>
+                    <span class="cb-box"><svg viewBox="0 0 20 15"><path transform="translate(-1227.117 612.242)" d="M1234.22-597.615l-6.584-5.628a1.524,1.524,0,0,1-.149-2.141,1.5,1.5,0,0,1,2.128-.15l5.438,4.648,9.417-10.834a1.5,1.5,0,0,1,2.128-.15,1.525,1.525,0,0,1,.149,2.141l-10.4,11.964a1.5,1.5,0,0,1-1.139.522A1.494,1.494,0,0,1,1234.22-597.615Z"/></svg></span>
+                    <span>This is the account</span>
+                  </label>
+                </div>
+              </section>
+
+              <div class="sub-switch">
+                <button type="button" class="sub-item checked" data-mode="password">
+                  <span class="sub-icon"><svg viewBox="0 0 44 44"><path transform="translate(-3351.994 -1280.989)" d="M3381.12,1299.991v-1.8a7.158,7.158,0,0,0-6.7-7.2,7.039,7.039,0,0,0-7.411,6.992v2h-.283a1.726,1.726,0,0,0-1.732,1.719v11.562a1.726,1.726,0,0,0,1.732,1.719H3381.4a1.725,1.725,0,0,0,1.732-1.719V1301.71a1.725,1.725,0,0,0-1.732-1.719Zm-11.758-1.833a4.7,4.7,0,0,1,9.406,0v1.833h-9.406Zm6.212,12.278a.493.493,0,0,1-.126.388.508.508,0,0,1-.376.167h-2.015a.507.507,0,0,1-.376-.167.493.493,0,0,1-.125-.388l.318-2.837a1.971,1.971,0,0,1-.826-1.608,2.016,2.016,0,0,1,4.031,0,1.97,1.97,0,0,1-.824,1.608Z"/></svg></span>
+                  Password Login
+                </button>
+                <button type="button" class="sub-item" data-mode="code">
+                  <span class="sub-icon"><svg viewBox="0 0 44 44"><path transform="translate(3.836 29.4)" d="M5.38.46V-12.2L2.16-9.4v-3.08l3.22-2.8H8.24V.46Zm7.98,0V-2.12l5.88-6.84a3.59,3.59,0,0,0,.62-.92,2.472,2.472,0,0,0,.18-.98,2.058,2.058,0,0,0-.48-1.42,1.775,1.775,0,0,0-1.4-.54,2.468,2.468,0,0,0-.7.1,1.743,1.743,0,0,0-.62.33,1.624,1.624,0,0,0-.45.62,2.373,2.373,0,0,0-.17.95H13.36a4.791,4.791,0,0,1,.37-1.93,4.222,4.222,0,0,1,1.01-1.44,4.34,4.34,0,0,1,1.52-.9,5.679,5.679,0,0,1,1.9-.31,5.579,5.579,0,0,1,1.92.32,4.439,4.439,0,0,1,1.51.9,4.071,4.071,0,0,1,.99,1.43,4.853,4.853,0,0,1,.36,1.91,4.128,4.128,0,0,1-.12,1.04,4.261,4.261,0,0,1-.33.87,5.166,5.166,0,0,1-.53.82q-.32.41-.7.87l-4.4,5.12h6.08V.46ZM34.72-4.1a4.938,4.938,0,0,1-.4,2.06A4.235,4.235,0,0,1,33.24-.57,4.343,4.343,0,0,1,31.65.3a6.527,6.527,0,0,1-1.93.28A6.635,6.635,0,0,1,27.85.32,4.568,4.568,0,0,1,26.26-.5a4.036,4.036,0,0,1-1.12-1.44,5.032,5.032,0,0,1-.44-2.1h2.88a2.422,2.422,0,0,0,.19.9,1.875,1.875,0,0,0,.46.64,1.91,1.91,0,0,0,.68.39,2.545,2.545,0,0,0,.81.13,2.11,2.11,0,0,0,1.53-.57,2.162,2.162,0,0,0,.59-1.63,2.192,2.192,0,0,0-.57-1.59,2.162,2.162,0,0,0-1.63-.59h-.42V-8.84h.42a1.843,1.843,0,0,0,1.52-.57,2.173,2.173,0,0,0,.46-1.41,1.878,1.878,0,0,0-.58-1.49,1.969,1.969,0,0,0-1.34-.51,1.947,1.947,0,0,0-1.36.49,1.927,1.927,0,0,0-.58,1.41H24.88a4.6,4.6,0,0,1,.41-1.89,4.293,4.293,0,0,1,1.03-1.4,4.527,4.527,0,0,1,1.51-.88,5.531,5.531,0,0,1,1.87-.31,5.426,5.426,0,0,1,1.92.33,4.594,4.594,0,0,1,1.52.92,4.154,4.154,0,0,1,1,1.42,4.551,4.551,0,0,1,.36,1.83,3.557,3.557,0,0,1-.52,2.04,3.667,3.667,0,0,1-1.3,1.18,4.038,4.038,0,0,1,1.44,1.3A3.911,3.911,0,0,1,34.72-4.1Z"/></svg></span>
+                  Code login
+                </button>
+              </div>
+
+              <section class="form-item f-pass">
+                <div class="ui-input">
+                  <svg class="ic ic-lock" viewBox="0 0 48 48"><g transform="translate(-1283 -2123)"><path transform="translate(-2075.991 833.018)" d="M3395.9,1308.251v-3.45a13.723,13.723,0,0,0-12.842-13.8,13.492,13.492,0,0,0-14.205,13.4v3.832h-.542a3.307,3.307,0,0,0-3.32,3.293v22.161a3.307,3.307,0,0,0,3.32,3.294h28.129a3.308,3.308,0,0,0,3.32-3.294v-22.161a3.307,3.307,0,0,0-3.32-3.293Zm-22.541-3.514a9.014,9.014,0,1,1,18.027,0v3.515H3373.36Zm11.908,23.534a.943.943,0,0,1-.23.743.973.973,0,0,1-.72.32h-3.862a.973.973,0,0,1-.722-.32.947.947,0,0,1-.23-.742l.61-5.438a3.777,3.777,0,0,1-1.582-3.082,3.863,3.863,0,1,1,7.727,0,3.777,3.777,0,0,1-1.58,3.082Z"/></g></svg>
+                  <svg class="ic ic-sms" viewBox="0 0 24 24"><path d="M12 3C6.9 3 2.8 6.4 2.8 10.6c0 2.3 1.2 4.4 3.2 5.8v3.1c0 .4.5.7.9.4l2.7-1.9c.8.2 1.6.3 2.4.3 5.1 0 9.2-3.5 9.2-7.7S17.1 3 12 3z" fill="#87D1A2"/><circle cx="8.2" cy="10.7" r="1.1" fill="#067831"/><circle cx="12" cy="10.7" r="1.1" fill="#067831"/><circle cx="15.8" cy="10.7" r="1.1" fill="#067831"/></svg>
+                  <span class="star">*</span>
+                  <input type="password" placeholder="Enter password" maxlength="16" autocomplete="current-password" spellcheck="false">
+                  <span class="suffix">
+                    <button type="button" class="clear-btn" aria-label="Clear" hidden>
+                      <svg viewBox="0 0 24 24"><path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6z"/></svg>
+                    </button>
+                    <button type="button" class="eye" aria-label="Show password">
+                      <svg class="ic-hide" viewBox="0 0 26 21.514"><g transform="translate(-1767.233 -314.086)"><path d="M1789.072,314.086l-3.3,3.3a14.338,14.338,0,0,0-5.53-1.1,13.585,13.585,0,0,0-13.012,8.88l.069.007-.069.007a12.82,12.82,0,0,0,4.592,6.156l-2.855,2.855,1.412,1.412,20.1-20.1Zm-14.792,11.032a5.935,5.935,0,0,1,8.907-5.148l-1.827,1.828a3.507,3.507,0,0,0-4.456,4.456l-1.825,1.825A5.888,5.888,0,0,1,1774.279,325.118Z"/><path d="M1793.172,339.617a3.516,3.516,0,0,0,3.514-3.515c0-.028,0-.056,0-.084l-3.6,3.6C1793.115,339.613,1793.143,339.617,1793.172,339.617Z" transform="translate(-12.942 -10.978)"/><path d="M1801.535,330.583a12.792,12.792,0,0,0-3.948-5.668l-3.507,3.507a5.934,5.934,0,0,1-7.668,7.668l-2.594,2.594a14.48,14.48,0,0,0,4.729.794,13.555,13.555,0,0,0,12.988-8.881l-.07-.007Z" transform="translate(-8.302 -5.421)"/></g></svg>
+                      <svg class="ic-show" viewBox="0 0 26 20"><g transform="translate(-1767 -318)"><path d="M1780,318a13.585,13.585,0,0,0-13.012,8.88l.069.007-.069.007A13.555,13.555,0,0,0,1780,336a13.555,13.555,0,0,0,13.012-9.106l-.069-.007.069-.007A13.585,13.585,0,0,0,1780,318Zm0,15.482a6.482,6.482,0,1,1,6.482-6.482A6.482,6.482,0,0,1,1780,333.482Zm0-10.639a4.157,4.157,0,1,0,4.157,4.157A4.157,4.157,0,0,0,1780,322.843Z"/></g></svg>
+                    </button>
+                    <button type="button" class="get-code">Get Code</button>
+                  </span>
+                </div>
+                <div class="explain"><span class="e-ic"><svg viewBox="0 0 34 34"><path d="M19.092 7.32275L18.6183 20.0115H15.5172L15.0676 7.32275H19.092ZM14.8541 23.9019C14.847 23.626 14.9017 23.352 15.0145 23.1001C15.1272 22.8482 15.295 22.6248 15.5055 22.4464C15.9487 22.0643 16.5187 21.8616 17.1036 21.8784C17.6882 21.8586 18.2581 22.0641 18.6954 22.4526C18.9005 22.6332 19.0635 22.8566 19.1729 23.107C19.2824 23.3574 19.3356 23.6287 19.3289 23.9019C19.3333 24.1722 19.2808 24.4405 19.1748 24.6893C19.0687 24.938 18.9115 25.1617 18.7134 25.3457C18.5184 25.5378 18.287 25.6892 18.0328 25.7909C17.7786 25.8926 17.5067 25.9425 17.2329 25.9378C16.6004 25.9705 15.9797 25.7584 15.4993 25.3457C15.2936 25.1661 15.1294 24.9439 15.018 24.6947C14.9067 24.4454 14.8507 24.1749 14.8541 23.9019Z"/></svg></span><span class="pass-err">Password required</span></div>
+              </section>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="remember-row">
+      <label class="ui-checkbox checked">
+        <input type="checkbox" id="rememberBox" checked>
+        <span class="cb-box"><svg viewBox="0 0 20 15"><path transform="translate(-1227.117 612.242)" d="M1234.22-597.615l-6.584-5.628a1.524,1.524,0,0,1-.149-2.141,1.5,1.5,0,0,1,2.128-.15l5.438,4.648,9.417-10.834a1.5,1.5,0,0,1,2.128-.15,1.525,1.525,0,0,1,.149,2.141l-10.4,11.964a1.5,1.5,0,0,1-1.139.522A1.494,1.494,0,0,1,1234.22-597.615Z"/></svg></span>
+        <span id="rememberText">Remember account password</span>
+      </label>
+      <div class="help" id="helpBox">Can't receive verification code?<a href="#">Customer Service</a></div>
+    </div>
+
+    <div class="submit-row">
+      <div class="btn-wrap">
+        <span class="btn-gift" id="btnBadge">
+          <img src="gift.avif" alt="" onerror="imgFallback(this,'https://www.qqwin.one/siteadmin/skin/lobby_asset/common/common/home/img_xzapp_jl.avif?manualVersion=1&amp;version=cdc6c81845')">
+          <span class="gift-pill">+7</span>
+        </span>
+        <button type="button" class="ui-button" id="submitBtn"><span id="submitLabel">Login</span></button>
+      </div>
+    </div>
+
+    <ul class="quickentry" id="quickList">
+      <li><a href="#">Customer Service</a></li>
+      <li id="liForget"><a href="#">Forgot Password</a></li>
+    </ul>
+
+    <div class="thirdparty">
+      <div class="tp-title"><span id="tpTitle">Quick login</span></div>
+      <ul class="tp-list">
+        <li id="liPasskey"><button type="button" class="tp-item tp-webauthn" title="Passkey">
+          <svg viewBox="0 0 112 112"><path transform="translate(-26403.109 4682.892)" d="M26466.486-4595.68a2.824,2.824,0,0,1,2.818-2.823c2.279,0,4.961-.027,5.5-.081h.006a15.03,15.03,0,0,0,8.855-3.432c2.523-2.437,3.467-6.133,3.8-8.814.059-.5.115-2.992.115-5.788a2.811,2.811,0,0,1,2.814-2.81,2.817,2.817,0,0,1,2.816,2.81c0,.874-.008,5.267-.156,6.485v.007c-.453,3.588-1.795,8.618-5.543,12.226l-.047.041c-3.129,2.8-7.1,4.393-12.111,4.88-1.1.108-5.234.115-6.051.115A2.823,2.823,0,0,1,26466.486-4595.68Zm-23.51,2.7a20.856,20.856,0,0,1-12.131-4.847l-.027-.027c-4.137-3.886-5.287-9.376-5.6-12.314-.1-.765-.17-2.884-.217-6.3l-.008-.108a2.808,2.808,0,0,1,.8-2,2.794,2.794,0,0,1,1.984-.853h.039a2.83,2.83,0,0,1,2.816,2.775c.027,2.342.1,5.24.178,5.835l.006.027c.23,2.152,1.029,6.16,3.818,8.793,2.158,1.916,5.076,3.033,8.908,3.412h.014c.48.054,3.154.081,5.348.081a2.827,2.827,0,0,1,2.824,2.823,2.825,2.825,0,0,1-2.824,2.816C26448.1-4592.864,26444.025-4592.871,26442.977-4592.979Zm2.891-17.831a2.819,2.819,0,0,1,.264-3.96l.021-.013a2.815,2.815,0,0,1,1.84-.684,2.81,2.81,0,0,1,2.113.955,8.617,8.617,0,0,0,2.057,1.537,12.807,12.807,0,0,0,6.311,1.55,13.855,13.855,0,0,0,6.545-1.57,10.214,10.214,0,0,0,2.3-1.6,2.832,2.832,0,0,1,2.039-.874,2.806,2.806,0,0,1,1.93.772,2.824,2.824,0,0,1,.115,3.98l-.008.006a14.916,14.916,0,0,1-3.527,2.58,19.568,19.568,0,0,1-9.395,2.349C26450.482-4605.787,26446.32-4610.295,26445.867-4610.81Zm6.939-8.841a2.817,2.817,0,0,1,.344-2.126,2.843,2.843,0,0,1,1.754-1.259c1.49-.346,2.029-.961,2.125-1.266v-11.975a2.824,2.824,0,0,1,2.816-2.823,2.827,2.827,0,0,1,2.824,2.823v12.09a6.088,6.088,0,0,1-.908,2.958,8.338,8.338,0,0,1-5.545,3.669,2.657,2.657,0,0,1-.67.082A2.8,2.8,0,0,1,26452.807-4619.65Zm18.793-7.765a2.753,2.753,0,0,1-2.752-2.749v-7.426a2.753,2.753,0,0,1,2.752-2.749h1.779a2.751,2.751,0,0,1,2.748,2.749v7.426a2.751,2.751,0,0,1-2.748,2.749Zm-27.486,0a2.749,2.749,0,0,1-2.742-2.749v-7.426a2.749,2.749,0,0,1,2.742-2.749h1.789a2.756,2.756,0,0,1,2.748,2.749v7.426a2.756,2.756,0,0,1-2.748,2.749Zm43.469-9.836c0-2.8-.057-5.28-.115-5.781-.338-2.681-1.281-6.384-3.8-8.814a15.033,15.033,0,0,0-8.855-3.432h-.006c-.535-.054-3.217-.088-5.5-.088a2.819,2.819,0,0,1-2.818-2.815,2.819,2.819,0,0,1,2.818-2.816c.816,0,4.953.007,6.051.115,5.016.487,8.982,2.084,12.111,4.88l.047.041c3.748,3.6,5.09,8.638,5.543,12.226v.006c.148,1.219.156,5.612.156,6.479a2.818,2.818,0,0,1-2.816,2.816A2.813,2.813,0,0,1,26487.582-4637.251Zm-59.8,2.816a2.794,2.794,0,0,1-1.984-.853,2.82,2.82,0,0,1-.8-2l.008-.108c.047-3.419.121-5.538.217-6.3.311-2.938,1.461-8.428,5.6-12.314l.027-.027a20.875,20.875,0,0,1,12.131-4.847c1.049-.108,5.125-.115,5.93-.115a2.821,2.821,0,0,1,2.824,2.816,2.821,2.821,0,0,1-2.824,2.815c-2.193,0-4.867.034-5.348.088h-.014c-3.832.379-6.744,1.5-8.908,3.4-2.789,2.64-3.588,6.647-3.818,8.8l-.006.027c-.076.6-.15,3.493-.178,5.828a2.832,2.832,0,0,1-2.816,2.783Z"/></svg>
+        </button></li>
+        <li><button type="button" class="tp-item" title="Google"><img src="https://www.qqwin.one/siteadmin/skin/lobby_asset/common/common/common/comm_icon_sf_google.avif?manualVersion=1&amp;version=8cc1975ff8" alt="Google" onerror="imgFallback(this,'google.avif')"></button></li>
+        <li><button type="button" class="tp-item" title="Facebook"><img src="https://www.qqwin.one/siteadmin/skin/lobby_asset/common/common/common/comm_icon_sf_facebook.avif?manualVersion=1&amp;version=522a814693" alt="Facebook" onerror="imgFallback(this,'facebook.avif')"></button></li>
+        <li><button type="button" class="tp-item" title="Telegram"><img src="https://www.qqwin.one/siteadmin/skin/lobby_asset/common/common/common/comm_icon_sf_telegram.avif?manualVersion=1&amp;version=6ee9751b1b" alt="Telegram" onerror="imgFallback(this,'telegram.avif')"></button></li>
+      </ul>
+    </div>
+  </main>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let activeTab='login';
+const modes={register:'password',login:'password'};
+const acctTypes={register:'account',login:'account'};
+const POPOVER_MIN=7;                                    /* popover opens at >=7 chars */
+ $$('.explain').forEach(e=>e.classList.remove('show'));
+
+/* account-field validation: empty -> generic message; phone mode with wrong
+   length -> +91 message */
+function acctValidate(panel){
+  const v=panel.querySelector('.f-account input').value.trim(),
+        phone=acctTypes[panel.dataset.panel]==='phone',
+        msg=panel.querySelector('.f-account .explain span:last-child');
+  if(!v){if(msg)msg.textContent='Please enter Phone number/Email/Profile';return false}
+  if(phone&&!/^\d{10}$/.test(v)){if(msg)msg.textContent='Area code +91 supports 10-digit phone numbers';return false}
+  return true;
+}
+/* yellow bar glides straight to the target tab, synced with the slide */
+function moveLine(){
+  const t=$(`.tab[data-tab="${activeTab}"]`),line=$('#tabsLine');
+  line.style.left=(t.offsetLeft+t.offsetWidth/2)+'px';
+}
+function syncRemember(){
+  if(activeTab==='register'){
+    $('#rememberText').innerHTML='I am over 18 years old and have read and agreed to <a href="#">《User Agreement》</a>';
+    $('#helpBox').classList.remove('show');
+    return;
+  }
+  const code=modes.login==='code';
+  $('#rememberText').textContent=code?'Remember me':'Remember account password';
+  $('#helpBox').classList.toggle('show',code);
+}
+function syncRegisterUI(){
+  const reg=activeTab==='register';
+  $('#tabBadge').style.display=reg?'none':'flex';
+  $('#btnBadge').classList.toggle('show',reg);
+  $('#liForget').style.display=reg?'none':'';
+  $('#quickList').classList.toggle('single',reg);
+  $('#liPasskey').style.display=reg?'none':'';
+  $('#tpTitle').textContent=reg?'Binding registration':'Quick login';
+}
+function syncPulse(){
+  const p=$(`.panel[data-panel="${activeTab}"]`);
+  const hasErr=!!p&&!!p.querySelector('.explain.show');
+  document.querySelector('.btn-wrap').classList.toggle('pulse',hasErr);
+}
+/* switch the account field between profile mode and phone (+91) mode */
+function setAcctType(panel,type){
+  acctTypes[panel.dataset.panel]=type;
+  panel.classList.toggle('phone-mode',type==='phone');
+  const inp=panel.querySelector('.f-account input');
+  if(type==='phone'){inp.setAttribute('maxlength',10);inp.inputMode='numeric'}
+  else{inp.removeAttribute('maxlength');inp.inputMode='text'}
+  panel.querySelectorAll('.acct-opt').forEach(o=>{
+    const on=o.dataset.acct===type;
+    o.classList.toggle('checked',on);
+    o.querySelector('input').checked=on;
+  });
+}
+function setTab(name){
+  activeTab=name;
+  $$('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  /* swiper: track slides to the active panel (register=0, login=1) */
+  $$('.panel').forEach(p=>p.classList.toggle('active',p.dataset.panel===name));
+  $('#tabsTrack').style.transform=name==='register'?'translateX(0)':'translateX(-100%)';
+  $$('.acct-type').forEach(r=>r.classList.remove('show'));
+  $('#submitLabel').textContent=name==='login'?'Login':'Register';
+  moveLine();syncRemember();syncRegisterUI();syncPulse();
+}
+ $$('.tab').forEach(t=>t.addEventListener('click',()=>setTab(t.dataset.tab)));
+window.addEventListener('resize',moveLine);
+window.addEventListener('load',moveLine);
+
+ $$('.sub-item').forEach(it=>it.addEventListener('click',()=>{
+  const panel=it.closest('.panel'),name=panel.dataset.panel,mode=it.dataset.mode;
+  if(modes[name]===mode)return;
+  modes[name]=mode;
+  it.closest('.sub-switch').querySelectorAll('.sub-item').forEach(x=>x.classList.toggle('checked',x===it));
+  panel.classList.toggle('code',mode==='code');
+  const inp=panel.querySelector('.f-pass input');
+  if(inp){
+    inp.value='';inp.type='text';
+    const eye=panel.querySelector('.f-pass .eye');if(eye)eye.classList.remove('seeing');
+    inp.placeholder=mode==='code'?'Enter SMS code':'Enter password';
+    inp.setAttribute('maxlength',mode==='code'?6:16);
+    inp.inputMode=mode==='code'?'numeric':'text';
+  }
+  /* code mode needs a phone — force phone type */
+  if(mode==='code')setAcctType(panel,'phone');
+  const pe=panel.querySelector('.pass-err');
+  if(pe)pe.textContent=mode==='code'?'Code required':'Password required';
+  const pex=panel.querySelector('.f-pass .explain');
+  if(pex)pex.classList.add('show');
+  syncRemember();syncPulse();
+}));
+
+ $$('.eye').forEach(btn=>btn.addEventListener('click',()=>{
+  const inp=btn.closest('.ui-input').querySelector('input');
+  const show=inp.type==='password';
+  inp.type=show?'text':'password';
+  btn.classList.toggle('seeing',show);
+}));
+
+/* circled clear (x) on every field that has one */
+ $$('.ui-input').forEach(box=>{
+  const inp=box.querySelector('input'),clr=box.querySelector('.clear-btn');
+  if(!inp||!clr)return;
+  inp.addEventListener('input',()=>{clr.hidden=inp.value===''});
+  clr.addEventListener('click',()=>{inp.value='';inp.dispatchEvent(new Event('input'));inp.focus()});
+});
+
+ $$('.get-code').forEach(btn=>btn.addEventListener('click',()=>{
+  const panel=btn.closest('.panel'),acc=panel.querySelector('.f-account input'),
+        err=panel.querySelector('.f-account .explain');
+  if(!acctValidate(panel)){err.classList.add('show');acc.focus();return}
+  let s=60;btn.disabled=true;btn.textContent='60s';
+  const t=setInterval(()=>{s--;btn.textContent=s>0?s+'s':'Get Code';
+    if(s<=0){clearInterval(t);btn.disabled=false}},1000);
+}));
+
+/* per-panel account field — popover opens ONLY at >=7 chars;
+   selecting an option moves the highlight, transforms the input, closes */
+ $$('.panel').forEach(panel=>{
+  const acc=panel.querySelector('.f-account input'),
+        row=panel.querySelector('.acct-type'),
+        err=panel.querySelector('.f-account .explain');
+  const openPopover=()=>{if(acc.value.trim().length>=POPOVER_MIN)row.classList.add('show')};
+  const closePopover=()=>row.classList.remove('show');
+  acc.addEventListener('input',()=>{
+    acc.value.trim().length>=POPOVER_MIN?row.classList.add('show'):row.classList.remove('show');
+    err.classList.remove('show');syncPulse();
+  });
+  acc.addEventListener('focus',openPopover);
+  acc.addEventListener('blur',()=>{
+    err.classList.toggle('show',!acctValidate(panel));syncPulse();
+  });
+  row.querySelectorAll('.acct-opt').forEach(o=>o.addEventListener('change',()=>{
+    if(o.querySelector('input').checked){
+      setAcctType(panel,o.dataset.acct);
+      closePopover();
+    }
+  }));
+  document.addEventListener('pointerdown',e=>{
+    if(!panel.querySelector('.f-account').contains(e.target))closePopover();
+  });
+});
+
+/* generic validation (skips account — handled above) */
+ $$('.form-item').forEach(item=>{
+  if(item.classList.contains('f-account'))return;
+  const inp=item.querySelector('input'),err=item.querySelector('.explain');
+  const upd=()=>{err.classList.remove('show');syncPulse()};
+  inp.addEventListener('input',upd);
+  inp.addEventListener('blur',()=>{if(!inp.value.trim())err.classList.add('show');syncPulse()});
+});
+
+ $('#rememberBox').addEventListener('change',e=>
+  e.target.closest('label').classList.toggle('checked',e.target.checked));
+
+/* strength meter */
+const rp=$('.panel[data-panel="register"] .f-pass input'),lumps=$$('.panel[data-panel="register"] .lump');
+rp.addEventListener('input',()=>{
+  const v=rp.value;let sc=0;
+  if(v.length>=8)sc++;
+  if(/[a-z]/.test(v)&&/[A-Z]/.test(v))sc++;
+  if(/\d/.test(v))sc++;
+  if(/[^A-Za-z0-9]/.test(v))sc++;
+  if(v&&!sc)sc=1;
+  const colors=['','rgba(254,96,78,.9)','rgba(255,170,9,.9)','rgba(254,224,1,.9)','rgba(26,232,27,.9)'];
+  lumps.forEach((l,i)=>l.style.background=i<sc?colors[sc]:'rgba(196,255,217,.28)');
+});
+
+/* full submit handler */
+ $('#submitBtn').addEventListener('click',()=>{
+  const p=$(`.panel[data-panel="${activeTab}"]`);
+  if(!p)return;
+  let ok=true;
+  const aerr=p.querySelector('.f-account .explain');
+  if(!acctValidate(p)){aerr.classList.add('show');ok=false}else aerr.classList.remove('show');
+  p.querySelectorAll('.form-item').forEach(item=>{
+    if(item.classList.contains('f-account'))return;
+    if(getComputedStyle(item).display==='none')return;
+    const inp=item.querySelector('input'),err=item.querySelector('.explain');
+    if(!inp||!err)return;
+    if(!inp.value.trim()){err.classList.add('show');ok=false}
+    else err.classList.remove('show');
+  });
+  if(activeTab==='register'&&modes.register==='password'){
+    const pv=p.querySelector('.f-pass input').value,
+          cv=p.querySelector('.f-confirm input').value,
+          ce=p.querySelector('.f-confirm .explain');
+    if(pv!==cv){
+      ce.querySelector('span:last-child').textContent='The two passwords do not match';
+      ce.classList.add('show');ok=false;
+    }
+  }
+  syncPulse();
+  if(!ok)return;
+  const btn=$('#submitBtn'),label=$('#submitLabel');
+  btn.disabled=true;label.textContent='Please wait...';
+  setTimeout(()=>{
+    // TODO: replace with real backend fetch
+    label.textContent='✓ Success';
+    setTimeout(()=>{
+      btn.disabled=false;
+      label.textContent=activeTab==='login'?'Login':'Register';
+    },900);
+  },900);
+ });
+</script>
+</body>
+</html>
