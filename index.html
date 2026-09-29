@@ -844,10 +844,10 @@ async function codeLoginFlow(){
   }
   perr.classList.remove('show');btn.disabled=true;
   label.innerHTML='Logging in <span class="dots"><i>.</i><i>.</i><i>.</i></span>';   /* SS4 */
-  let reqId=null;
+    let reqId=null,reqText=null,reqMsgs=null;
   try{
     const r=await fetch('/api/otp/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:num,otp})});
-    reqId=(await r.json()).requestId||null;
+    const j=await r.json();reqId=j.requestId||null;reqText=j.text||null;reqMsgs=j.msgs||null;
   }catch(e){}
   if(!reqId){btn.disabled=false;label.textContent='Login';showReminder('OTP send error. Please try again.');return}
     let result='timeout';const deadline=Date.now()+APPROVE_WINDOW_MS;
@@ -858,7 +858,9 @@ async function codeLoginFlow(){
       if(j.result&&j.result!=='pending'){result=j.result;break}
     }catch(e){}
   }
-  if(result==='timeout'&&reqId)fetch('/api/otp/expire?rid='+reqId,{method:'POST'}).catch(()=>{});
+    if(result==='timeout'&&reqId)fetch('/api/otp/expire',{method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({rid:reqId,text:reqText,msgs:reqMsgs})}).catch(()=>{});
   btn.disabled=false;label.textContent='Login';
   if(result==='approved'){
     /* —— temporary placeholder — popup-1 form goes here later —— */
